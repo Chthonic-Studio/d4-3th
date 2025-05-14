@@ -1,0 +1,105 @@
+[gd_scene load_steps=4 format=3 uid="uid://bx78ucsp7du5h"]
+
+[ext_resource type="Texture2D" uid="uid://bs32tk2ioadsi" path="res://Assets/CameraFeed.png" id="1_2ppmm"]
+[ext_resource type="Texture2D" uid="uid://ba0tecqsn242d" path="res://Assets/BottomPanel.png" id="1_ktt6o"]
+[ext_resource type="Texture2D" uid="uid://dxdgalw73g4br" path="res://Assets/FlipSwitch2Off.png" id="2_4uoxc"]
+
+[node name="mainUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer3" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(0, 175)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.361111
+offset_bottom = -150.0
+grow_horizontal = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer3"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(0, 325)
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.637778
+anchor_right = 1.0
+anchor_bottom = 0.887778
+offset_top = 0.999939
+offset_bottom = 101.0
+grow_horizontal = 2
+grow_vertical = 0
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_ktt6o")
+
+[node name="TextureButton" type="TextureButton" parent="MarginContainer/TextureRect"]
+layout_mode = 0
+anchor_left = 0.06125
+anchor_top = 0.673846
+anchor_right = 0.08625
+anchor_bottom = 0.796923
+offset_right = 34.0
+offset_bottom = 13.0
+texture_normal = ExtResource("2_4uoxc")
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureButton2" type="TextureButton" parent="MarginContainer/TextureRect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.11875
+anchor_top = 0.683077
+anchor_right = 0.14375
+anchor_bottom = 0.806153
+offset_right = 34.0
+offset_bottom = 13.0
+texture_normal = ExtResource("2_4uoxc")
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureButton2" type="TextureButton" parent="MarginContainer/TextureRect/TextureButton2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.24324
+anchor_top = -0.037736
+anchor_right = 1.78378
+anchor_bottom = 0.716981
+offset_right = 34.0
+offset_bottom = 13.0
+texture_normal = ExtResource("2_4uoxc")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="MarginContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/NinePatchRect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.459375
+anchor_top = 0.0646154
+anchor_right = 0.576875
+anchor_bottom = 0.966154
+offset_right = 6.10352e-05
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer2" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_top = 175.0
+offset_right = 450.0
+offset_bottom = 575.0
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer2"]
+layout_mode = 2
+texture = ExtResource("1_2ppmm")
