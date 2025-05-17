@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjj555xw1xuf3"]
+
+[ext_resource type="FontFile" uid="uid://wppn0e6hu844" path="res://assets/Silver.ttf" id="1_q3mp2"]
+
+[node name="frequencyData2" type="Label"]
+theme_override_fonts/font = ExtResource("1_q3mp2")
+theme_override_font_sizes/font_size = 25
+text = "Frequency: 1005"
