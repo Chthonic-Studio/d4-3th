@@ -11,10 +11,22 @@ config_version=5
 [application]
 
 config/name="D4-3TH Frequency"
+config/version="0.1"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*res://scripts/gameManager.gd"
+TimeManager="*res://scripts/timeManager.gd"
+CameraManager="*res://scripts/cameraManager.gd"
+AudioManager="*res://scripts/audioManager.gd"
 
 [display]
 
 window/size/viewport_width=1600
 window/size/viewport_height=900
+
+[rendering]
+
+viewport/hdr_2d=true

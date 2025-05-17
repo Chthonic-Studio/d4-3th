@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxdgalw73g4br"
-path="res://.godot/imported/FlipSwitch2Off.png-66f2ba1f47f1d506a011c329632abe76.ctex"
+uid="uid://co5n4xp7jbqup"
+path="res://.godot/imported/FlipSwitchOn.png-bf107af8dab057bf4b1b01d1fc3668ff.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/FlipSwitch2Off.png"
-dest_files=["res://.godot/imported/FlipSwitch2Off.png-66f2ba1f47f1d506a011c329632abe76.ctex"]
+source_file="res://assets/images/FlipSwitchOn.png"
+dest_files=["res://.godot/imported/FlipSwitchOn.png-bf107af8dab057bf4b1b01d1fc3668ff.ctex"]
 
 [params]
 

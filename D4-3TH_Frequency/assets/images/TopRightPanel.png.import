@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bs32tk2ioadsi"
-path="res://.godot/imported/CameraFeed.png-d76f5c6ad5a7268418cbd189ae59dd10.ctex"
+uid="uid://cksamha1xgoyl"
+path="res://.godot/imported/TopRightPanel.png-7e709cab85e33f594485aae55a0267a5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CameraFeed.png"
-dest_files=["res://.godot/imported/CameraFeed.png-d76f5c6ad5a7268418cbd189ae59dd10.ctex"]
+source_file="res://assets/images/TopRightPanel.png"
+dest_files=["res://.godot/imported/TopRightPanel.png-7e709cab85e33f594485aae55a0267a5.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cigur4182yar0"
-path="res://.godot/imported/FlipSwitchOff.png-b503889e6647e5b8f71ee888d9eec138.ctex"
+uid="uid://inc21dnpbq1x"
+path="res://.godot/imported/PowerButton.png-1fdc239f09872bca314b3cd4b9913942.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/FlipSwitchOff.png"
-dest_files=["res://.godot/imported/FlipSwitchOff.png-b503889e6647e5b8f71ee888d9eec138.ctex"]
+source_file="res://assets/images/PowerButton.png"
+dest_files=["res://.godot/imported/PowerButton.png-1fdc239f09872bca314b3cd4b9913942.ctex"]
 
 [params]
 
