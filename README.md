@@ -35,7 +35,7 @@
 - **No run is like any other:** The characteristics of the mysterious threat change with every new game, as well as all the characteristics of your allied forces. You have to get to discover them for the first time, every time.
 - **An unseen hero:** You are meant to be the hero of the story, but you won’t meet your allies except through the comms panel. You have to receive, analyze, understand, categorize and forward comms messages to make sure that humanity survives this crisis. 
 - **One screen challenge:** All gameplay occurs on a single interactive screen.
-- **Trust no one:** The mysterious entity attacking humanity is known to be able to mimic humans in some ways, so every new piece of information, every strange situation happening in your home base, can be real, or it can be the entity, it’s up to you to discern it.
+- **To trust or not to trust** The mysterious entity attacking humanity is known to be able to mimic humans in some ways, so every new piece of information, every strange situation happening in your home base, can be real, or it can be the entity, it’s up to you to discern it. But there are people's lives depending on your choices, will you be distrustful or will you try to save as many as possibe?
 
 ### Narrative
 
