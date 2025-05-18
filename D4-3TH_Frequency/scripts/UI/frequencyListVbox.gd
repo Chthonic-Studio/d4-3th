@@ -66,6 +66,10 @@ extends VBoxContainer
 	$FrequencyListHbox6/frequency30/frequency30Button
 ]
 
+var shown_frequency_id: int = -1
+var active_frequency_id: int = -1
+
+@onready var active_frequency_button = $"../../../FrequencyInfoContainer/NinePatchRect/currentFrequency"
 @onready var frequency_data_scroll = $"../../../FrequencyInfoContainer/NinePatchRect/FrequencyInfoScrollCont/FrequencyInfoVbox"
 var frequency_data_scene = preload("res://scenes/frequency_data.tscn")
 
@@ -73,12 +77,49 @@ var frequencies: Array = []
 
 func _ready():
 	GameManager.connect("frequencies_updated", Callable(self, "update_frequency_list"))
+	GameManager.connect("active_frequency_changed", Callable(self, "_on_active_frequency_changed"))
+	active_frequency_button.pressed.connect(_on_go_to_active_frequency_button_pressed)
 	update_frequency_list(GameManager.frequencies)
 	for idx in button_nodes.size():
 		button_nodes[idx].pressed.connect(func():
 			_on_frequency_button_pressed(idx)
 		)
 			
+func _on_active_frequency_changed(new_id: int):
+	var was_viewing_active = (shown_frequency_id == active_frequency_id)
+	active_frequency_id = new_id
+	if was_viewing_active:
+		_show_frequency_data(active_frequency_id)
+	else:
+		_update_active_button()
+
+func _update_active_button():
+	active_frequency_button.visible = (shown_frequency_id != active_frequency_id)
+
+func _on_go_to_active_frequency_button_pressed():
+	_show_frequency_data(active_frequency_id)
+
+func _show_frequency_data(freq_id: int):
+	shown_frequency_id = freq_id
+	var freq = null
+	for f in GameManager.frequencies:
+		if f["id"] == freq_id:
+			freq = f
+			break
+	# Clear old data entries...
+	for c in frequency_data_scroll.get_children():
+		c.queue_free()
+	if freq:
+		for entry in freq.get("data_entries", []):
+			var data_label = frequency_data_scene.instantiate()
+			data_label.text = str(entry)
+			frequency_data_scroll.add_child(data_label)
+	else:
+		var data_label = frequency_data_scene.instantiate()
+		data_label.text = "No active channel on this frequency"
+		frequency_data_scroll.add_child(data_label)
+	_update_active_button()
+
 func sort_ascending(a, b):
 	if a["id"] < b["id"]:
 		return true
@@ -107,7 +148,7 @@ func update_frequency_list(new_frequencies: Array) -> void:
 func _on_frequency_button_pressed(idx):
 	if idx >= frequencies.size(): return
 	var freq = frequencies[idx]
-	show_frequency_data(freq)
+	_show_frequency_data(freq["id"])
 
 func show_frequency_data(freq: Dictionary):
 	# Clear old data entries

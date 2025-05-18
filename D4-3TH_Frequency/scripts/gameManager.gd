@@ -3,6 +3,7 @@ extends Node
 signal game_started
 signal game_over
 signal frequency_changed(frequency: int)
+signal active_frequency_changed(frequency: int)
 signal frequencies_updated
 
 @onready var FrequencyOptions = preload("res://scripts/lists/frequencyOptions.gd").new()
@@ -37,6 +38,7 @@ func reset_game():
 func signal_number_changed(frequency: int) -> void:
 	print("Active signal changed to: ", frequency)
 	emit_signal("frequency_changed", frequency)
+	emit_signal("active_frequency_changed", frequency)
 
 func initialize_run():
 	generate_threat_traits()
@@ -65,7 +67,7 @@ func generate_frequencies():
 		"error_rate": randi_range(FrequencyOptions.ERROR_RATE_RANGE[0], FrequencyOptions.ERROR_RATE_RANGE[1]),
 		"latency": randi_range(FrequencyOptions.LATENCY_RANGE[0], FrequencyOptions.LATENCY_RANGE[1]),
 		"personnel": [],
-		"status": status.pick_random(),
+		"status": "ONLINE",
 		"data_entries": ["1001", "Operator: General " + operator_name, "Type: Command Center"]
 	})
 	while frequencies.size() < 30:
