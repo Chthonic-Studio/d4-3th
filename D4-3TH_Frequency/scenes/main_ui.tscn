@@ -365,9 +365,9 @@ metadata/_edit_use_anchors_ = true
 [node name="FrequencyListVBox" type="VBoxContainer" parent="BottomPanel/BPanel_LeftRect/FrequencyListContainer/FrequencyListRect"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.137457
+anchor_top = 0.2
 anchor_right = 1.01064
-anchor_bottom = 0.993127
+anchor_bottom = 1.02414
 offset_right = -1.52588e-05
 theme_override_constants/separation = 12
 script = ExtResource("9_82kx8")
@@ -890,6 +890,8 @@ offset_bottom = 289.0
 
 [node name="FrequencyInfoVbox" type="VBoxContainer" parent="BottomPanel/BPanel_LeftRect/FrequencyInfoContainer/NinePatchRect/FrequencyInfoScrollCont"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="currentFrequency" type="Button" parent="BottomPanel/BPanel_LeftRect/FrequencyInfoContainer/NinePatchRect"]
 layout_mode = 0
@@ -1018,7 +1020,6 @@ texture = ExtResource("5_kyx1g")
 environment = SubResource("Environment_r8eje")
 
 [node name="dialogueBox" type="MarginContainer" parent="."]
-visible = false
 layout_mode = 0
 offset_left = 450.0
 offset_top = 215.0
