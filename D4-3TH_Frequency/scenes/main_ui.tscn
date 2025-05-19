@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://bx78ucsp7du5h"]
+[gd_scene load_steps=19 format=4 uid="uid://bx78ucsp7du5h"]
 
 [ext_resource type="TileSet" uid="uid://bidtnsah5g5wl" path="res://assets/tilesets/Camp_Tileset.tres" id="1_jnl7h"]
 [ext_resource type="Script" uid="uid://db7bnmpuxymut" path="res://scripts/UI/top_panel.gd" id="1_kyx1g"]
@@ -12,7 +12,17 @@
 [ext_resource type="Texture2D" uid="uid://inc21dnpbq1x" path="res://assets/images/PowerButton.png" id="8_r0apq"]
 [ext_resource type="Script" uid="uid://ccouyexb0bnpi" path="res://scripts/UI/camera_feed.gd" id="8_r8eje"]
 [ext_resource type="Script" uid="uid://bvslha3h6dhhk" path="res://scripts/UI/frequencyListVbox.gd" id="9_82kx8"]
+[ext_resource type="Texture2D" uid="uid://vhmls5rm2hsn" path="res://assets/images/ProgressBar.png" id="10_hst8y"]
 [ext_resource type="Texture2D" uid="uid://eburt2og5jf" path="res://assets/images/DialogueScreen.png" id="11_r0apq"]
+[ext_resource type="Texture2D" uid="uid://bdpskik4672qq" path="res://assets/images/ProgressBarInverse.png" id="11_u04fh"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_ulqfl"]
+diffuse_texture = ExtResource("11_u04fh")
+normal_texture = ExtResource("11_u04fh")
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_rx44x"]
+diffuse_texture = ExtResource("11_u04fh")
+normal_texture = ExtResource("11_u04fh")
 
 [sub_resource type="Environment" id="Environment_r8eje"]
 background_mode = 3
@@ -195,45 +205,71 @@ offset_bottom = 24.0
 texture_normal = ExtResource("8_r0apq")
 metadata/_edit_use_anchors_ = true
 
-[node name="signalIntegrity" type="ProgressBar" parent="BottomPanel/BottomPanelRect"]
-custom_minimum_size = Vector2(150, 0)
+[node name="signalIntegrity" type="TextureProgressBar" parent="BottomPanel/BottomPanelRect"]
+custom_minimum_size = Vector2(150, 20)
+offset_left = 1111.0
+offset_top = 30.9999
+offset_right = 1261.0
+offset_bottom = 50.9999
+value = 90.0
+rounded = true
+nine_patch_stretch = true
+texture_progress = ExtResource("10_hst8y")
+
+[node name="ColorRect" type="ColorRect" parent="BottomPanel/BottomPanelRect/signalIntegrity"]
+show_behind_parent = true
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.694375
-anchor_top = 0.101538
-anchor_right = 0.819375
-anchor_bottom = 0.16
-offset_right = -50.0
-value = 50.0
-show_percentage = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.69, 0.69, 0.69, 0.105882)
 metadata/_edit_use_anchors_ = true
 
-[node name="errorRate" type="ProgressBar" parent="BottomPanel/BottomPanelRect"]
+[node name="errorRate" type="TextureProgressBar" parent="BottomPanel/BottomPanelRect"]
 custom_minimum_size = Vector2(100, 0)
+layout_mode = 0
+offset_left = 1410.0
+offset_top = 75.9999
+offset_right = 1471.0
+offset_bottom = 89.9999
+value = 90.0
+rounded = true
+nine_patch_stretch = true
+texture_progress = SubResource("CanvasTexture_ulqfl")
+
+[node name="ColorRect" type="ColorRect" parent="BottomPanel/BottomPanelRect/errorRate"]
+show_behind_parent = true
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.87875
-anchor_top = 0.233846
-anchor_right = 0.9725
-anchor_bottom = 0.316923
-offset_right = -50.0
-offset_bottom = -12.0
-value = 50.0
-show_percentage = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.69, 0.69, 0.69, 0.105882)
 metadata/_edit_use_anchors_ = true
 
-[node name="latency" type="ProgressBar" parent="BottomPanel/BottomPanelRect"]
+[node name="latency" type="TextureProgressBar" parent="BottomPanel/BottomPanelRect"]
 custom_minimum_size = Vector2(100, 0)
+offset_left = 1410.0
+offset_top = 112.0
+offset_right = 1510.0
+offset_bottom = 126.0
+value = 90.0
+rounded = true
+nine_patch_stretch = true
+texture_progress = SubResource("CanvasTexture_rx44x")
+
+[node name="ColorRect" type="ColorRect" parent="BottomPanel/BottomPanelRect/latency"]
+show_behind_parent = true
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.879375
-anchor_top = 0.347692
-anchor_right = 0.973125
-anchor_bottom = 0.430769
-offset_right = -50.0
-offset_bottom = -12.0
-value = 50.0
-show_percentage = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.69, 0.69, 0.69, 0.105882)
 metadata/_edit_use_anchors_ = true
 
 [node name="voiceModulation" type="Label" parent="BottomPanel/BottomPanelRect"]
@@ -895,12 +931,12 @@ size_flags_vertical = 3
 
 [node name="currentFrequency" type="Button" parent="BottomPanel/BPanel_LeftRect/FrequencyInfoContainer/NinePatchRect"]
 layout_mode = 0
-offset_left = 64.0001
+offset_left = 54.0
 offset_top = 20.0
-offset_right = 169.0
+offset_right = 190.0
 offset_bottom = 42.0
 theme_override_font_sizes/font_size = 10
-text = "[Current Frequency]"
+text = "[Go To Current Frequency]"
 flat = true
 
 [node name="GameStatsContainer" type="MarginContainer" parent="BottomPanel/BPanel_LeftRect"]

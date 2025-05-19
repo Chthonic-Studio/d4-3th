@@ -15,6 +15,8 @@ var frequencies := []
 var threat_traits := []
 var personnel := []
 
+var frequency_update_interval = 0.4
+
 var status = ["ONLINE", "OFFLINE", "COMPROMISED"]
 
 func _ready():
@@ -57,36 +59,44 @@ func generate_frequencies():
 	frequencies.clear()
 	var freq_ids := {}
 	freq_ids[1001] = true # Always add command center
+
+	# Use "Army" for command center
+	var freq_type = "Army"
+	var ranges = FrequencyOptions.STATS_RANGES[freq_type]
 	var operator_name = Names.get_random_operator_name()
 	frequencies.append({
 		"id": 1001,
 		"operator": operator_name,
-		"type": "Army",
-		"signal_integrity": randi_range(FrequencyOptions.SIGNAL_INTEGRITY_RANGE[0], FrequencyOptions.SIGNAL_INTEGRITY_RANGE[1]),
-		"transponder_signature": randf_range(0.1, 1.0),
-		"error_rate": randi_range(FrequencyOptions.ERROR_RATE_RANGE[0], FrequencyOptions.ERROR_RATE_RANGE[1]),
-		"latency": randi_range(FrequencyOptions.LATENCY_RANGE[0], FrequencyOptions.LATENCY_RANGE[1]),
+		"type": freq_type,
+		"signal_integrity_range": ranges["signal_integrity"],
+		"error_rate_range": ranges["error_rate"],
+		"latency_range": ranges["latency"],
+		"transponder_dots_range": ranges["transponder_dots"],
+		"transponder_signature": "RECOGNIZED",
 		"personnel": [],
 		"status": "ONLINE",
 		"data_entries": ["1001", "Operator: General " + operator_name, "Type: Command Center"]
 	})
+
 	while frequencies.size() < 30:
 		var id = randi_range(1002, 9899)
 		if freq_ids.has(id): continue    
 		freq_ids[id] = true
-		var freq_type = FrequencyOptions.TYPES.pick_random()
+		freq_type = FrequencyOptions.TYPES.pick_random()
+		ranges = FrequencyOptions.STATS_RANGES[freq_type]
 		operator_name = Names.get_random_operator_name()
 		frequencies.append({
 			"id": id,
 			"operator": operator_name,
 			"type": freq_type,
-			"signal_integrity": randi_range(FrequencyOptions.SIGNAL_INTEGRITY_RANGE[0], FrequencyOptions.SIGNAL_INTEGRITY_RANGE[1]),
-			"transponder_signature": randf_range(0.1, 1.0),
-			"error_rate": randi_range(FrequencyOptions.ERROR_RATE_RANGE[0], FrequencyOptions.ERROR_RATE_RANGE[1]),
-			"latency": randi_range(FrequencyOptions.LATENCY_RANGE[0], FrequencyOptions.LATENCY_RANGE[1]),
+			"signal_integrity_range": ranges["signal_integrity"],
+			"error_rate_range": ranges["error_rate"],
+			"latency_range": ranges["latency"],
+			"transponder_dots_range": ranges["transponder_dots"],
+			"transponder_signature": "RECOGNIZED",
 			"personnel": [],
 			"status": status.pick_random(),
 			"data_entries": [str(id), "Operator: " + operator_name, "Type: " + freq_type]
 		})
-	
+
 	emit_signal("frequencies_updated")

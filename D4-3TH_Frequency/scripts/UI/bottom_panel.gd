@@ -28,8 +28,18 @@ var micOn : bool = false
 var powerOn : bool = false
 
 # FREQUENCY NUMBERS
-# Store current digits (initialize to the initial display)
+# Store current digits (initialize to Command Center)
 var signal_digits: Array = [1, 0, 0, 1]
+
+var signal_timer: Timer
+var error_timer: Timer
+var latency_timer: Timer
+var transponder_timer: Timer
+
+var current_freq: Variant = null
+var transponder_anim_time := 0.0
+var transponder_dots_step := 1
+var transponder_animating := false
 
 # IMAGES #
 @onready var flipSwitchOn = preload("res://assets/images/FlipSwitchOn.png")
@@ -56,6 +66,9 @@ func _ready():
 
 	voice_modulation.text = "INACTIVE"
 	transponder_signature.text = "INACTIVE"
+
+	GameManager.connect("frequency_changed", Callable(self, "_on_frequency_changed"))
+	listen_button.connect("pressed", Callable(self, "_on_listen_toggled"))
 	
 	
 func toggleReply():
@@ -92,3 +105,122 @@ func update_signal_numbers_display() -> void:
 func frequency_changed() -> void:
 	var signal_id = int("%d%d%d%d" % signal_digits)
 	GameManager.signal_number_changed(signal_id)
+
+func _on_frequency_changed(freq_id: int):
+	current_freq = null
+	for freq in GameManager.frequencies:
+		if freq["id"] == freq_id:
+			current_freq = freq
+			break
+	print("Frequency changed, found:", current_freq)
+	if current_freq == null:
+		_reset_stat_ui()
+		_stop_all_stat_timers()
+	else:
+		_start_stat_updates()
+		_update_stat_ui(true)
+
+func _reset_stat_ui():
+	signal_integrity.value = 0
+	error_rate.value = 0
+	latency.value = 0
+	transponder_signature.text = "INACTIVE"
+	# etc. for any other UI elements
+	
+func _stop_all_stat_timers():
+	if signal_timer: signal_timer.stop(); signal_timer.queue_free(); signal_timer = null
+	if error_timer: error_timer.stop(); error_timer.queue_free(); error_timer = null
+	if latency_timer: latency_timer.stop(); latency_timer.queue_free(); latency_timer = null
+	if transponder_timer: transponder_timer.stop(); transponder_timer.queue_free(); transponder_timer = null
+
+func _on_listen_toggled():
+	_start_stat_updates()
+	_update_stat_ui(true)
+
+func _start_stat_updates():
+	_stop_all_stat_timers()
+	if current_freq:
+		print("Starting timers for frequency:", current_freq["id"])
+	else:
+		print("Not starting timers, no valid freq")
+	# Always start signal integrity timer
+	signal_timer = Timer.new()
+	signal_timer.wait_time = 0.2
+	signal_timer.one_shot = false
+	signal_timer.connect("timeout", Callable(self, "_update_signal_integrity"))
+	add_child(signal_timer)
+	signal_timer.start()
+	# Only start others if Listen is ON
+	if listenOn and current_freq:
+		error_timer = Timer.new()
+		error_timer.wait_time = 0.2
+		error_timer.one_shot = false
+		error_timer.connect("timeout", Callable(self, "_update_error_rate"))
+		add_child(error_timer)
+		error_timer.start()
+		latency_timer = Timer.new()
+		latency_timer.wait_time = 0.2
+		latency_timer.one_shot = false
+		latency_timer.connect("timeout", Callable(self, "_update_latency"))
+		add_child(latency_timer)
+		latency_timer.start()
+		_start_transponder_signature()
+	else:
+		error_rate.value = 0
+		latency.value = 0
+		transponder_signature.text = "INACTIVE"
+		transponder_animating = false
+
+func _update_signal_integrity():
+	if not current_freq: return
+	var r = current_freq["signal_integrity_range"]
+	signal_integrity.value = randi_range(r[0], r[1])
+
+func _update_error_rate():
+	if not current_freq or not listenOn: error_rate.value = 0; return
+	var r = current_freq["error_rate_range"]
+	error_rate.value = randi_range(r[0], r[1])
+
+func _update_latency():
+	if not current_freq or not listenOn: latency.value = 0; return
+	var r = current_freq["latency_range"]
+	latency.value = randi_range(r[0], r[1])
+
+func _start_transponder_signature():
+	transponder_animating = true
+	transponder_dots_step = 1
+	var tr = current_freq["transponder_dots_range"]
+	transponder_anim_time = randf_range(tr[0], tr[1])
+	transponder_signature.text = "."
+	if transponder_timer:
+		transponder_timer.stop()
+		transponder_timer.queue_free()
+	transponder_timer = Timer.new()
+	transponder_timer.wait_time = 0.2
+	transponder_timer.one_shot = false
+	transponder_timer.connect("timeout", Callable(self, "_update_transponder_signature"))
+	add_child(transponder_timer)
+	transponder_timer.start()
+
+func _update_transponder_signature():
+	if not current_freq or not listenOn:
+		transponder_signature.text = "INACTIVE"
+		transponder_timer.stop()
+		return
+	transponder_anim_time -= 0.2
+	if transponder_anim_time <= 0.0:
+		transponder_signature.text = str(current_freq["transponder_signature"])
+		transponder_timer.stop()
+		transponder_animating = false
+		return
+	transponder_dots_step += 1
+	if transponder_dots_step > 3:
+		transponder_dots_step = 1
+	transponder_signature.text = ".".repeat(transponder_dots_step)
+
+func _update_stat_ui(reset := false):
+	if reset:
+		if not listenOn:
+			error_rate.value = 0
+			latency.value = 0
+			transponder_signature.text = "INACTIVE"
