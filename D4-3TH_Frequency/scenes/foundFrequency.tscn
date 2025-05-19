@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://cj7bsfjtnlaoh"]
+
+[ext_resource type="FontFile" uid="uid://wppn0e6hu844" path="res://assets/Silver.ttf" id="1_1v0rh"]
+[ext_resource type="Script" uid="uid://5grdckhe3n44" path="res://scripts/UI/found_frequency.gd" id="2_518b4"]
+
+[node name="foundFrequency" type="Label"]
+theme_override_fonts/font = ExtResource("1_1v0rh")
+theme_override_font_sizes/font_size = 25
+text = "1001"
+script = ExtResource("2_518b4")
+
+[node name="foundFrequencyButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+flat = true

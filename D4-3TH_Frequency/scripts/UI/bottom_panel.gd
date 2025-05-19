@@ -21,6 +21,12 @@ extends MarginContainer
 @onready var mic_button = $BottomPanelRect/micButton
 @onready var power_button = $BottomPanelRect/powerButton
 
+@onready var frequency_list_vbox = $BPanel_LeftRect/FrequencyListContainer/FrequencyListRect/FrequencyListVBox
+@onready var found_frequency_list_vbox = $BPanel_LeftRect/FrequencyListContainer/FrequencyListRect/FoundFrequencyScroll
+@onready var known_button = $BPanel_LeftRect/FrequencyListContainer/FrequencyListRect/knownList
+@onready var found_button = $BPanel_LeftRect/FrequencyListContainer/FrequencyListRect/foundList
+var showing_known_list := true
+
 # BOOLEANS #
 var replyOn : bool = false
 var listenOn : bool = false
@@ -70,6 +76,10 @@ func _ready():
 	GameManager.connect("frequency_changed", Callable(self, "_on_frequency_changed"))
 	listen_button.connect("pressed", Callable(self, "_on_listen_toggled"))
 	
+	known_button.pressed.connect(show_known_list)
+	found_button.pressed.connect(show_found_list)
+	show_known_list()
+	
 	
 func toggleReply():
 	print("Toggling Reply")
@@ -94,7 +104,6 @@ func increment_signal_digit(index: int) -> void:
 	update_signal_numbers_display()
 	frequency_changed()
 	AudioManager.play_sfx(preload("res://assets/sfx/signal_button.mp3"))
-
 
 func update_signal_numbers_display() -> void:
 	signalNumber1.text = str(signal_digits[0])
@@ -224,3 +233,18 @@ func _update_stat_ui(reset := false):
 			error_rate.value = 0
 			latency.value = 0
 			transponder_signature.text = "INACTIVE"
+			
+func show_known_list():
+	frequency_list_vbox.visible = true
+	found_frequency_list_vbox.visible = false
+	showing_known_list = true
+	# Optional: Update button visuals to indicate active tab
+	known_button.disabled = true
+	found_button.disabled = false
+
+func show_found_list():
+	frequency_list_vbox.visible = false
+	found_frequency_list_vbox.visible = true
+	showing_known_list = false
+	known_button.disabled = false
+	found_button.disabled = true

@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://wwpwikc46ifu"]
+
+[ext_resource type="Shader" uid="uid://bkka6ygyhojkk" path="res://assets/resources/tree_shader.tres" id="1_vrjeg"]
+
+[resource]
+shader = ExtResource("1_vrjeg")
+shader_parameter/WindStrength = 5.0
