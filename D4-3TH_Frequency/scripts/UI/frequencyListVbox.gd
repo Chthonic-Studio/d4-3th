@@ -106,6 +106,11 @@ func _show_frequency_data(freq_id: int):
 		if f["id"] == freq_id:
 			freq = f
 			break
+	if freq == null:
+		for f in GameManager.found_frequencies:
+			if f["id"] == freq_id:
+				freq = f
+				break
 	# Clear old data entries...
 	for c in frequency_data_scroll.get_children():
 		c.queue_free()

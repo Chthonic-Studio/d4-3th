@@ -60,8 +60,7 @@ tangential_accel_min = -2.23517e-06
 tangential_accel_max = 7.0
 tangential_accel_curve = SubResource("CurveTexture_1t7kk")
 damping_max = 100.0
-scale_min = 1.5
-scale_max = 1.8
+scale_max = 1.5
 color_ramp = SubResource("GradientTexture1D_tshsl")
 color_initial_ramp = SubResource("GradientTexture1D_rbpqj")
 
@@ -136,7 +135,7 @@ particle_flag_disable_z = true
 emission_shape_offset = Vector3(0, -200, 0)
 emission_shape = 3
 emission_box_extents = Vector3(900, 150, 1)
-gravity = Vector3(0, 3000, 0)
+gravity = Vector3(1, 3000, 0)
 scale_min = 0.2
 scale_over_velocity_curve = SubResource("CurveXYZTexture_kvlnv")
 color_ramp = SubResource("GradientTexture1D_rrr7h")
@@ -161,6 +160,8 @@ particle_flag_disable_z = true
 direction = Vector3(1, -1, 0)
 initial_velocity_max = 100.0
 gravity = Vector3(0, 500, 0)
+scale_min = 0.1
+scale_max = 0.8
 alpha_curve = SubResource("CurveTexture_26nsp")
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_ulqfl"]
@@ -246,7 +247,7 @@ flip_h = true
 [node name="windyDay" type="Node2D" parent="ParticleEffects"]
 
 [node name="windTrails" type="GPUParticles2D" parent="ParticleEffects/windyDay"]
-position = Vector2(825, 496)
+position = Vector2(139, 367)
 scale = Vector2(5, 5)
 amount = 40
 texture = SubResource("GradientTexture2D_eigca")
@@ -284,7 +285,7 @@ occluder = SubResource("OccluderPolygon2D_4yyl0")
 
 [node name="rainSplash" type="GPUParticles2D" parent="ParticleEffects/rainyDay"]
 position = Vector2(921, 539)
-amount = 400
+amount = 1500
 lifetime = 0.2
 visibility_rect = Rect2(-300, -300, 900, 200)
 process_material = SubResource("ParticleProcessMaterial_rrr7h")

@@ -47,7 +47,10 @@ func signal_number_changed(frequency: int) -> void:
 func initialize_run():
 	generate_threat_traits()
 	generate_frequencies()
-	found_frequencies.clear() # Reset founds on new run
+
+	# TESTING: Add 3 random found frequencies at game start
+	for i in range(3):
+		add_found_frequency()
 
 func generate_threat_traits():
 	print("Generating threat traits")

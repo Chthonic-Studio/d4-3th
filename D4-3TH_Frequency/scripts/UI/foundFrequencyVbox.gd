@@ -8,6 +8,8 @@ const FREQUENCIES_PER_HBOX = 5
 var found_frequencies: Array = []
 var active_frequency_id: int = -1
 
+@onready var button = $"../../foundList"
+
 func _ready():
 	GameManager.connect("found_frequencies_updated", Callable(self, "update_found_frequency_list"))
 	GameManager.connect("active_frequency_changed", Callable(self, "_on_active_frequency_changed"))
@@ -34,7 +36,7 @@ func update_found_frequency_list():
 		var freq = found_frequencies[i]
 		var freq_btn = found_frequency_scene.instantiate()
 		freq_btn.set_frequency_data(freq)
-		freq_btn.pressed.connect(func():
+		button.pressed.connect(func():
 			_on_found_frequency_button_pressed(freq["id"])
 		)
 		hbox.add_child(freq_btn)
