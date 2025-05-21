@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://c38hxx2wqxig7"]
+
+[ext_resource type="FontFile" uid="uid://wppn0e6hu844" path="res://assets/Silver.ttf" id="1_dowyy"]
+
+[node name="message_bubble" type="Label"]
+custom_minimum_size = Vector2(540, 0)
+theme_override_constants/line_spacing = -10
+theme_override_fonts/font = ExtResource("1_dowyy")
+theme_override_font_sizes/font_size = 25
+text = "Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet"
+vertical_alignment = 1
+autowrap_mode = 3

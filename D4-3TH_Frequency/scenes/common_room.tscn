@@ -1,6 +1,21 @@
-[gd_scene load_steps=2 format=4 uid="uid://66dmulwa8dvg"]
+[gd_scene load_steps=6 format=4 uid="uid://66dmulwa8dvg"]
 
 [ext_resource type="TileSet" uid="uid://bidtnsah5g5wl" path="res://assets/tilesets/Camp_Tileset.tres" id="1_raxyv"]
+
+[sub_resource type="Gradient" id="Gradient_raxyv"]
+offsets = PackedFloat32Array(0, 0.829582, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.466238, 0.466238, 0.466238, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_lybfh"]
+gradient = SubResource("Gradient_raxyv")
+
+[sub_resource type="Gradient" id="Gradient_aetbp"]
+offsets = PackedFloat32Array(0.0321543, 0.498392, 1)
+colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 0.313726, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_q3uuu"]
+gradient = SubResource("Gradient_aetbp")
+fill = 1
 
 [node name="Common_Room" type="Node2D"]
 
@@ -20,6 +35,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 398.0
+offset_bottom = 255.0
+color = Color(0.35, 0.35, 0.35, 1)
+
+[node name="TileMapLayer5" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAEAA8AAwATAA4AAAAFAA8AAwAUAA4AAAAGAA8AAwAVAA4AAAAAAAIAAwAPAAoAAAAAAAMAAwAPAAsAAAACAAMAAwARAAsAAAA=")
+tile_set = ExtResource("1_raxyv")
+
 [node name="TileMapLayer4" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAAEAA8AAwATAA4AAAAFAA8AAwAUAA4AAAAGAA8AAwAVAA4AAAAAAAIAAwAPAAoAAAAAAAMAAwAPAAsAAAABAAIAAwAQAAoAAAABAAMAAwAQAAsAAAACAAIAAwARAAoAAAACAAMAAwARAAsAAAADAAEAAwASAAkAAAADAAIAAwASAAoAAAAEAAEAAwATAAkAAAAEAAIAAwATAAoAAAAFAAEAAwAUAAkAAAAFAAIAAwAUAAoAAAAGAAEAAwAVAAkAAAA=")
 tile_set = ExtResource("1_raxyv")
@@ -35,3 +59,21 @@ tile_set = ExtResource("1_raxyv")
 [node name="TileMapLayer3" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAABAAAAAwAbABMAAAACAAAAAwAcABMAAAADAAAAAwAdABMAAAAEAAAAAwAeABMAAAAAAAEAAwAbABMAAAABAAEAAwAcABMAAAACAAEAAwAdABMAAAADAAEAAwAeABMAAAABAA0AAwAbABUAAAABAA4AAwAbABYAAAAHAA4AAQACAAYAAAARAA4AAQAAAAQAAAASAA4AAQABAAQAAAAKAA4AAQAHAAAAAAAWAAwAAQACAAEAAAAWAA0AAQACAAIAAAAWAA4AAQACAAMAAAAXAAsAAQADAAAAAAAXAAwAAQADAAEAAAAXAA0AAQADAAIAAAAXAA4AAQADAAMAAAA=")
 tile_set = ExtResource("1_raxyv")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(201.5, 129.5)
+scale = Vector2(0.742001, 106.699)
+texture = SubResource("GradientTexture1D_lybfh")
+texture_scale = 2.09
+height = 45.0
+
+[node name="PointLight2D2" type="PointLight2D" parent="."]
+position = Vector2(371, 198)
+rotation = 2.53019
+scale = Vector2(2.29794, 1.49609)
+color = Color(0.639216, 0.960784, 1, 1)
+energy = 5.28
+blend_mode = 2
+texture = SubResource("GradientTexture2D_q3uuu")
+offset = Vector2(10, 0)
+height = 85.0

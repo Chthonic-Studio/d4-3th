@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://skx2jluixxnd"]
+
+[ext_resource type="FontFile" uid="uid://wppn0e6hu844" path="res://assets/Silver.ttf" id="1_dkwt5"]
+
+[node name="Label" type="Label"]
+custom_minimum_size = Vector2(300, 0)
+theme_override_constants/line_spacing = -10
+theme_override_fonts/font = ExtResource("1_dkwt5")
+theme_override_font_sizes/font_size = 22
+text = "Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet"
+autowrap_mode = 3

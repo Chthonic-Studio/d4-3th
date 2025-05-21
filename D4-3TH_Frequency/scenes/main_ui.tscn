@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=4 uid="uid://bx78ucsp7du5h"]
+[gd_scene load_steps=57 format=4 uid="uid://bx78ucsp7du5h"]
 
 [ext_resource type="Material" uid="uid://wwpwikc46ifu" path="res://assets/resources/swaying_trees.tres" id="1_4yyl0"]
 [ext_resource type="TileSet" uid="uid://bidtnsah5g5wl" path="res://assets/tilesets/Camp_Tileset.tres" id="1_jnl7h"]
@@ -23,6 +23,10 @@
 [ext_resource type="Texture2D" uid="uid://eburt2og5jf" path="res://assets/images/DialogueScreen.png" id="11_r0apq"]
 [ext_resource type="Texture2D" uid="uid://bdpskik4672qq" path="res://assets/images/ProgressBarInverse.png" id="11_u04fh"]
 [ext_resource type="Script" uid="uid://cwk4h3yectg48" path="res://scripts/UI/foundFrequencyVbox.gd" id="13_rx44x"]
+[ext_resource type="PackedScene" uid="uid://66dmulwa8dvg" path="res://scenes/common_room.tscn" id="21_wn4yt"]
+[ext_resource type="PackedScene" uid="uid://c38hxx2wqxig7" path="res://scenes/message_bubble.tscn" id="25_26nsp"]
+[ext_resource type="Script" uid="uid://bm51jm5hyci0d" path="res://scripts/UI/dialogue_ui.gd" id="25_rrr7h"]
+[ext_resource type="PackedScene" uid="uid://skx2jluixxnd" path="res://scenes/reply_option.tscn" id="26_rrr7h"]
 
 [sub_resource type="Gradient" id="Gradient_rbpqj"]
 offsets = PackedFloat32Array(0, 0.485531, 1)
@@ -260,7 +264,7 @@ process_material = SubResource("ParticleProcessMaterial_4yyl0")
 
 [node name="leaves" type="GPUParticles2D" parent="ParticleEffects/windyDay"]
 material = SubResource("CanvasItemMaterial_tshsl")
-position = Vector2(872, 254)
+position = Vector2(850, 685)
 amount = 100
 texture = ExtResource("2_j03cv")
 visibility_rect = Rect2(-750, -300, 2000, 600)
@@ -1364,6 +1368,8 @@ offset_top = -15.0
 offset_right = 195.0
 offset_bottom = -7.0
 
+[node name="Common_Room" parent="CameraFeedImage" instance=ExtResource("21_wn4yt")]
+
 [node name="CameraFeed" type="MarginContainer" parent="."]
 layout_mode = 0
 offset_top = 175.0
@@ -1379,18 +1385,18 @@ texture = ExtResource("5_kyx1g")
 environment = SubResource("Environment_r8eje")
 
 [node name="dialogueBox" type="MarginContainer" parent="."]
-visible = false
 layout_mode = 0
 offset_left = 450.0
 offset_top = 215.0
 offset_right = 1050.0
 offset_bottom = 565.0
 
-[node name="NinePatchRect" type="NinePatchRect" parent="dialogueBox"]
+[node name="dialogue9Patch" type="NinePatchRect" parent="dialogueBox"]
 layout_mode = 2
 texture = ExtResource("11_r0apq")
+script = ExtResource("25_rrr7h")
 
-[node name="Label" type="Label" parent="dialogueBox/NinePatchRect"]
+[node name="Label" type="Label" parent="dialogueBox/dialogue9Patch"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.047
@@ -1402,14 +1408,37 @@ offset_top = 0.1
 offset_right = 39.8
 offset_bottom = 23.1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="dialogueBox/NinePatchRect"]
+[node name="dialogueScroll" type="ScrollContainer" parent="dialogueBox/dialogue9Patch"]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 23.0
 offset_right = 570.0
 offset_bottom = 215.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="dialogueBox/NinePatchRect/ScrollContainer"]
+[node name="dialogueVbox" type="VBoxContainer" parent="dialogueBox/dialogue9Patch/dialogueScroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="message_bubble" parent="dialogueBox/dialogue9Patch/dialogueScroll/dialogueVbox" instance=ExtResource("25_26nsp")]
+layout_mode = 2
+
+[node name="replyContainer" type="MarginContainer" parent="dialogueBox/dialogue9Patch"]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 218.0
+offset_right = 575.0
+offset_bottom = 326.0
+
+[node name="replyVbox" type="VBoxContainer" parent="dialogueBox/dialogue9Patch/replyContainer"]
+layout_mode = 2
+
+[node name="Label" parent="dialogueBox/dialogue9Patch/replyContainer/replyVbox" instance=ExtResource("26_rrr7h")]
+layout_mode = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="dialogueBox/dialogue9Patch"]
+layout_mode = 0
+offset_left = 27.0
+offset_top = 217.0
+offset_right = 124.0
+offset_bottom = 325.0

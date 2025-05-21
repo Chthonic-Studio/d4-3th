@@ -74,6 +74,7 @@ func _ready():
 	transponder_signature.text = "INACTIVE"
 
 	GameManager.connect("frequency_changed", Callable(self, "_on_frequency_changed"))
+	GameManager.connect("voice_modulation_changed", Callable(self, "_on_voice_modulation_changed"))
 	listen_button.connect("pressed", Callable(self, "_on_listen_toggled"))
 	
 	known_button.pressed.connect(show_known_list)
@@ -92,6 +93,11 @@ func toggleListen():
 	listenOn = not listenOn
 	listen_button.texture_normal = flipSwitch2On if listenOn else flipSwitch2Off
 	AudioManager.play_sfx(preload("res://assets/sfx/comm_mode_switch.mp3"))
+	if listenOn == true:
+		GameManager.listenToggled()
+		GameManager.listenOn = true
+	else:
+		GameManager.listenOn = false
 	
 func toggleMic():
 	print("Toggling Mic")
@@ -121,6 +127,11 @@ func _on_frequency_changed(freq_id: int):
 		if freq["id"] == freq_id:
 			current_freq = freq
 			break
+	if current_freq == null:
+		for freq in GameManager.found_frequencies:
+			if freq["id"] == freq_id:
+				current_freq = freq
+				break
 	print("Frequency changed, found:", current_freq)
 	if current_freq == null:
 		_reset_stat_ui()
@@ -128,6 +139,7 @@ func _on_frequency_changed(freq_id: int):
 	else:
 		_start_stat_updates()
 		_update_stat_ui(true)
+		GameManager.current_frequency = current_freq["id"]
 
 func _reset_stat_ui():
 	signal_integrity.value = 0
@@ -145,6 +157,7 @@ func _stop_all_stat_timers():
 func _on_listen_toggled():
 	_start_stat_updates()
 	_update_stat_ui(true)
+	
 
 func _start_stat_updates():
 	_stop_all_stat_timers()
@@ -227,12 +240,17 @@ func _update_transponder_signature():
 		transponder_dots_step = 1
 	transponder_signature.text = ".".repeat(transponder_dots_step)
 
+func _on_voice_modulation_changed(modulation: String):
+	voice_modulation.text = modulation
+
 func _update_stat_ui(reset := false):
 	if reset:
 		if not listenOn:
 			error_rate.value = 0
 			latency.value = 0
 			transponder_signature.text = "INACTIVE"
+
+
 			
 func show_known_list():
 	frequency_list_vbox.visible = true

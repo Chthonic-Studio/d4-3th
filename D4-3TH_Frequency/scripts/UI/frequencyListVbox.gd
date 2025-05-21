@@ -80,18 +80,14 @@ func _ready():
 	GameManager.connect("active_frequency_changed", Callable(self, "_on_active_frequency_changed"))
 	active_frequency_button.pressed.connect(_on_go_to_active_frequency_button_pressed)
 	update_frequency_list(GameManager.frequencies)
-	for idx in button_nodes.size():
-		button_nodes[idx].pressed.connect(func():
-			_on_frequency_button_pressed(idx)
-		)
+	for idx in range(button_nodes.size()):
+		button_nodes[idx].pressed.connect(func(): _on_frequency_button_pressed(idx))
 			
 func _on_active_frequency_changed(new_id: int):
-	var was_viewing_active = (shown_frequency_id == active_frequency_id)
+	shown_frequency_id = new_id
+	_show_frequency_data(new_id)
 	active_frequency_id = new_id
-	if was_viewing_active:
-		_show_frequency_data(active_frequency_id)
-	else:
-		_update_active_button()
+	_update_active_button()
 
 func _update_active_button():
 	active_frequency_button.visible = (shown_frequency_id != active_frequency_id)
@@ -106,11 +102,6 @@ func _show_frequency_data(freq_id: int):
 		if f["id"] == freq_id:
 			freq = f
 			break
-	if freq == null:
-		for f in GameManager.found_frequencies:
-			if f["id"] == freq_id:
-				freq = f
-				break
 	# Clear old data entries...
 	for c in frequency_data_scroll.get_children():
 		c.queue_free()

@@ -4,9 +4,12 @@ signal game_started
 signal game_over
 
 signal frequency_changed(frequency: int)
+signal frequency_changed_dialogue
 signal active_frequency_changed(frequency: int)
 signal frequencies_updated
 signal found_frequencies_updated
+signal voice_modulation_changed(modulation: String)
+signal listen_toggled
 
 @onready var FrequencyOptions = preload("res://scripts/lists/frequencyOptions.gd").new()
 @onready var ThreatTraits = preload("res://scripts/lists/threatTraits.gd").new()
@@ -18,7 +21,13 @@ var found_frequencies := []
 var threat_traits := []
 var personnel := []
 
+var listenOn: bool = false
+
+var current_frequency: int
+
 var frequency_update_interval = 0.4
+
+var current_voice_modulation: String = "Normal"
 
 var status = ["ONLINE", "OFFLINE", "COMPROMISED"]
 
@@ -42,7 +51,15 @@ func reset_game():
 func signal_number_changed(frequency: int) -> void:
 	print("Active signal changed to: ", frequency)
 	emit_signal("frequency_changed", frequency)
+	emit_signal("frequency_changed_dialogue")
 	emit_signal("active_frequency_changed", frequency)
+
+func set_voice_modulation_value(modulation: String):
+	current_voice_modulation = modulation
+	emit_signal("voice_modulation_changed", modulation)
+	
+func listenToggled():
+	emit_signal("listen_toggled")
 
 func initialize_run():
 	generate_threat_traits()

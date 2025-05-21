@@ -21,6 +21,8 @@ GameManager="*res://scripts/gameManager.gd"
 TimeManager="*res://scripts/timeManager.gd"
 CameraManager="*res://scripts/cameraManager.gd"
 AudioManager="*res://scripts/audioManager.gd"
+DialogueManager="*res://scripts/dialogueManager.gd"
+EventsManager="*res://scripts/eventsManager.gd"
 
 [display]
 
