@@ -1,4 +1,27 @@
-## Milestones & Timeline
+# Code Structure
+
+## Table of Contents
+- [Code Structure](#code-structure)
+  - [Global Scripts](#global-scripts)
+- [Milestones and Timeline](#milestones-and-timeline)
+
+## Code Structure
+
+### Global Scripts
+
+### GameManager
+It handles core game state management, frequency-related operations, and communication between different game systems using signals. The script is designed to be a central hub for managing gameplay logic and shared data. Tracks: Game State Management, Frequency Management, Signal-Based Communications, Voice Modulation and Status Tracking. 
+
+### TimeManager
+Handles in-game time and dates.
+
+### DialogueManager
+Handles loading dialogue data, maintaining message histories, and managing active dialogues for different frequencies. It also provides tools for starting and tracking dialogues. Tracks: Dialogue Data Management, Message History Tracking, Active Dialogue Management, Frequency Specific Dialogue, Voice Modulation States. 
+
+
+
+
+## Milestones and Timeline
 
 ### Milestone 1: Core Loop, Main Functions, and UI Systems  
 **Dates:** May 17th – May 25th
@@ -68,3 +91,6 @@
 - Create Itch.io page (screenshots, description, tags).
 - Upload WebGL build and any supporting files.
 - Announce submission to team and on social channels (if applicable).
+
+
+
