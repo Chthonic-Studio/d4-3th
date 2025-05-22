@@ -1,16 +1,31 @@
-extends HBoxContainer
+extends VBoxContainer
 
-@onready var sender_label = $Sender
-@onready var body_label = $Body
+@onready var sender_label = $message_sender
+@onready var body_label = $message_body
+
+signal reveal_complete
 
 var reveal_speed := 0.03 # seconds per character
 var reveal_timer = null
+var pending_message = null
+var reveal_index := 0
+var did_reveal := false
+
+func _ready() -> void:
+	pass
+
+func defineLabels() -> void:
+	sender_label = $message_sender
+	body_label = $message_body
 
 func setup(message: Dictionary):
+	if sender_label == null:
+		defineLabels()
+	else:
+		pass
 	var sender = message.get("sender", "???")
 	var time_string = _format_time(message.get("date", {}))
 	var body = message.get("body", "")
-	# Compose full text: "[hh:mm, MM/DD] <body>"
 	var full_text = "[%s] %s" % [time_string, body]
 
 	sender_label.text = sender
@@ -20,33 +35,50 @@ func setup(message: Dictionary):
 		self.add_theme_color_override("bg_color", Color(0.1, 0.2, 0.5, 0.2))
 	else:
 		body_label.text = ""
-		_reveal_word_by_word(full_text)
+		call_deferred("_reveal_word_by_word", full_text)
 		self.add_theme_color_override("bg_color", Color(0.2, 0.2, 0.2, 0.2))
 
 	# Forward voice modulation to GameManager (for BottomPanel)
 	if message.has("voice_modulation"):
 		GameManager.set_voice_modulation_value(message["voice_modulation"])
 
+func prepare_reveal(full_text: String):
+	pending_message = full_text
+	did_reveal = false
+	body_label.text = "" 
+
+func trigger_reveal():
+	if pending_message and not did_reveal:
+		_reveal_word_by_word(pending_message)
+		did_reveal = true
+
 func _reveal_word_by_word(full_text):
 	if reveal_timer:
 		reveal_timer.stop()
 		reveal_timer.queue_free()
+		
 	body_label.text = ""
 	var chars = full_text.split("")
-	var index = 0
+	reveal_index = 0
+	
 	reveal_timer = Timer.new()
 	reveal_timer.wait_time = reveal_speed
 	reveal_timer.one_shot = false
-	reveal_timer.connect("timeout", func():
-		if index < chars.size():
-			body_label.text += chars[index]
-			index += 1
+	
+	add_child(reveal_timer)
+	
+	reveal_timer.timeout.connect(func():
+		if reveal_index < chars.size():
+			body_label.text += chars[reveal_index]
+			reveal_index += 1
 		else:
 			reveal_timer.stop()
 			reveal_timer.queue_free()
+			reveal_timer = null
+			emit_signal("reveal_complete")
 	)
-	add_child(reveal_timer)
 	reveal_timer.start()
+	
 
 func _format_time(time_dict):
 	if not time_dict or not time_dict.has("day"):

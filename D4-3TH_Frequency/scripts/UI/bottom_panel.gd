@@ -61,6 +61,9 @@ func _ready():
 	listen_button.connect("pressed", Callable(self, "toggleListen"))
 	mic_button.connect("pressed", Callable(self, "toggleMic"))
 	
+	DialogueManager.connect("dialogue_started", Callable(self, "_on_dialogue_started"))
+	DialogueManager.connect("dialogue_ended", Callable(self, "_on_dialogue_ended"))
+	
 	# Connect buttons to increment functions
 	signalNumber1_button.pressed.connect(increment_signal_digit.bind(0))
 	signalNumber2_button.pressed.connect(increment_signal_digit.bind(1))
@@ -69,6 +72,7 @@ func _ready():
 	# Initialize display
 	update_signal_numbers_display()
 	frequency_changed()
+	
 
 	voice_modulation.text = "INACTIVE"
 	transponder_signature.text = "INACTIVE"
@@ -85,8 +89,14 @@ func _ready():
 func toggleReply():
 	print("Toggling Reply")
 	replyOn = not replyOn
+	if replyOn == true:
+		GameManager.replyOn = true
+	else:
+		GameManager.replyOn = false
 	reply_button.texture_normal = flipSwitch2On if replyOn else flipSwitch2Off
 	AudioManager.play_sfx(preload("res://assets/sfx/comm_mode_switch.mp3"))
+	GameManager.dialogue_conditions_changed()
+	print("Reply Status is " + str(GameManager.replyOn))
 
 func toggleListen():
 	print("Toggling Listen")
@@ -98,12 +108,19 @@ func toggleListen():
 		GameManager.listenOn = true
 	else:
 		GameManager.listenOn = false
+	print("Listen Status is " + str(GameManager.listenOn))
 	
 func toggleMic():
 	print("Toggling Mic")
 	micOn = not micOn
+	if micOn == true:
+		GameManager.micOn = true
+	else:
+		GameManager.micOn = false
 	mic_button.texture_normal = flipSwitchOn if micOn else flipSwitchOff
 	AudioManager.play_sfx(preload("res://assets/sfx/mic_switch.mp3"))
+	GameManager.dialogue_conditions_changed()
+	print("Mic Status is " + str(GameManager.micOn))
 	
 func increment_signal_digit(index: int) -> void:
 	signal_digits[index] = (signal_digits[index] + 1) % 10
@@ -116,6 +133,19 @@ func update_signal_numbers_display() -> void:
 	signalNumber2.text = str(signal_digits[1])
 	signalNumber3.text = str(signal_digits[2])
 	signalNumber4.text = str(signal_digits[3])
+
+func _on_dialogue_started(freq_id):
+	_set_frequency_change_enabled(false)
+
+func _on_dialogue_ended(freq_id):
+	_set_frequency_change_enabled(true)
+
+func _set_frequency_change_enabled(enabled: bool):
+	pass
+	#signalNumber1_button.disabled = not enabled
+	#signalNumber2_button.disabled = not enabled
+	#signalNumber3_button.disabled = not enabled
+	#signalNumber4_button.disabled = not enabled
 
 func frequency_changed() -> void:
 	var signal_id = int("%d%d%d%d" % signal_digits)

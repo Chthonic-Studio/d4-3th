@@ -7,21 +7,17 @@
 			"message": "This is command, do you copy?",
 			"sender": "operator",
 			"voice_modulation": "Normal",
-			"audio": "res://assets/audio/commander_line1.ogg",
-			"bg_audio": "res://assets/audio/radio_bg.ogg",
 			"replies": [
 			  {
 				"text": "Copy, command. Awaiting orders.",
 				"next": "order1",
 				"set_flags": ["replied_to_command"],
-				"audio": "res://assets/sfx/dialogue_click.mp3"
 			  },
 			  {
 				"text": "I read you. Situation report?",
 				"next": "report",
 				"set_flags": ["asked_for_report"],
 				"conditions": ["has_radio_contact"],
-				"audio": "res://assets/sfx/dialogue_click.mp3"
 			  }
 			]
 		  },
@@ -29,13 +25,11 @@
 			"message": "Stand by for further instructions. Maintain radio silence until contact.",
 			"sender": "operator",
 			"voice_modulation": "Normal",
-			"audio": "res://assets/audio/commander_line2.ogg",
 			"replies": [
 			  {
 				"text": "Understood. Standing by.",
 				"next": "end",
 				"set_flags": ["standing_by"],
-				"audio": "res://assets/sfx/dialogue_click.mp3",
 				"end_dialogue": true
 			  }
 			]
@@ -44,13 +38,11 @@
 			"message": "Situation is stable. All units accounted for.",
 			"sender": "operator",
 			"voice_modulation": "Normal",
-			"audio": "res://assets/audio/commander_line3.ogg",
 			"replies": [
 			  {
 				"text": "Acknowledged.",
 				"next": "end",
 				"set_flags": ["received_report"],
-				"audio": "res://assets/sfx/dialogue_click.mp3",
 				"custom_event": "report_acknowledged",
 				"custom_payload": { "reported": true }
 			  }
@@ -60,7 +52,6 @@
 			"message": "End of transmission.",
 			"sender": "operator",
 			"voice_modulation": "Normal",
-			"audio": "res://assets/audio/commander_line4.ogg",
 			"replies": []
 		  }
 		}

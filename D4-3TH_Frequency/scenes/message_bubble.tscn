@@ -1,9 +1,26 @@
-[gd_scene load_steps=2 format=3 uid="uid://c38hxx2wqxig7"]
+[gd_scene load_steps=4 format=3 uid="uid://cypi0rnual1td"]
 
+[ext_resource type="Script" uid="uid://dnwtwk5pdibhc" path="res://scripts/UI/message_bubble.gd" id="1_6h6s8"]
 [ext_resource type="FontFile" uid="uid://wppn0e6hu844" path="res://assets/Silver.ttf" id="1_dowyy"]
 
-[node name="message_bubble" type="Label"]
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_7esa0"]
+
+[node name="message_bubble" type="VBoxContainer"]
+script = ExtResource("1_6h6s8")
+
+[node name="message_sender" type="Label" parent="."]
+layout_mode = 2
+theme_override_constants/line_spacing = -420
+theme_override_constants/paragraph_spacing = -375
+theme_override_fonts/font = ExtResource("1_dowyy")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxLine_7esa0")
+text = "1001"
+uppercase = true
+
+[node name="message_body" type="Label" parent="."]
 custom_minimum_size = Vector2(540, 0)
+layout_mode = 2
 theme_override_constants/line_spacing = -10
 theme_override_fonts/font = ExtResource("1_dowyy")
 theme_override_font_sizes/font_size = 25

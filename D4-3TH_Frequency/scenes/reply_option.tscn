@@ -1,11 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://skx2jluixxnd"]
+[gd_scene load_steps=3 format=3 uid="uid://dnfbkehvpqrpt"]
 
 [ext_resource type="FontFile" uid="uid://wppn0e6hu844" path="res://assets/Silver.ttf" id="1_dkwt5"]
+[ext_resource type="Script" uid="uid://bmj2bsi3160v2" path="res://scripts/UI/reply_option.gd" id="1_i5x2f"]
 
-[node name="Label" type="Label"]
-custom_minimum_size = Vector2(300, 0)
-theme_override_constants/line_spacing = -10
+[node name="replyOption" type="Button"]
+custom_minimum_size = Vector2(0, 20)
+script = ExtResource("1_i5x2f")
+
+[node name="replyText" type="Label" parent="."]
+layout_mode = 0
+offset_left = 12.0
+offset_right = 128.0
+offset_bottom = 23.0
 theme_override_fonts/font = ExtResource("1_dkwt5")
-theme_override_font_sizes/font_size = 22
-text = "Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet"
-autowrap_mode = 3
+theme_override_font_sizes/font_size = 20
+text = "Reply Option Player "

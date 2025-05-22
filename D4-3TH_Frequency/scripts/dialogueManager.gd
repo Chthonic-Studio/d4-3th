@@ -16,7 +16,8 @@ var frequency_histories := {}          # {frequency_id: [message_dict, ...]}
 var active_dialogues := {}             # {frequency_id: {tree_id, current_node_id, ...}}
 var frequency_active := {}             # {frequency_id: true/false}
 
-enum VoiceModulation { Normal, Hostile, Distressed }
+enum VoiceModulation { INACTIVE, NORMAL, HOSTILE, DISTRESSED }
+var frequency_pending_dialogue := {}
 
 func _ready():
 	load_dialogue_data()
@@ -39,6 +40,7 @@ func load_dialogue_data():
 # Start a dialogue for a frequency
 # Pass in the frequency_id and the dialogue_id to use
 func start_dialogue(frequency_id: int, dialogue_id: String):
+	frequency_pending_dialogue[frequency_id] = dialogue_id
 	if not dialogue_data.has(dialogue_id):
 		push_error("DialogueManager: Dialogue id '%s' not found." % dialogue_id)
 		return
@@ -49,7 +51,20 @@ func start_dialogue(frequency_id: int, dialogue_id: String):
 	frequency_active[frequency_id] = true
 	emit_signal("dialogue_started", frequency_id)
 	_show_current_node(frequency_id)
-
+	
+# Call this whenever player "engages" with a frequency
+func try_activate_dialogue(frequency_id: int):
+	if frequency_pending_dialogue.has(frequency_id):
+		var dialogue_id = frequency_pending_dialogue[frequency_id]
+		active_dialogues[frequency_id] = {
+			"tree_id": dialogue_id,
+			"current_node": "start"
+		}
+		frequency_pending_dialogue.erase(frequency_id)
+		frequency_active[frequency_id] = true
+		emit_signal("dialogue_started", frequency_id)
+		_show_current_node(frequency_id)
+		
 # End a dialogue for a frequency
 func end_dialogue(frequency_id: int):
 	frequency_active[frequency_id] = false
@@ -96,6 +111,7 @@ func _show_current_node(frequency_id: int):
 
 # Called by UI when player selects a reply
 func choose_reply(frequency_id: int, reply_index: int):
+	print("Choose_reply called")
 	if not active_dialogues.has(frequency_id):
 		return
 	var tree_id = active_dialogues[frequency_id]["tree_id"]
@@ -116,7 +132,18 @@ func choose_reply(frequency_id: int, reply_index: int):
 	if reply.has("custom_event"):
 		EventsManager.trigger_event(reply["custom_event"], reply.get("custom_payload", {}))
 		emit_signal("system_message", "[SYSTEM] Event triggered: %s" % reply["custom_event"])
-
+	# Advance to next node, if any
+	if reply.has("next"):
+		active_dialogues[frequency_id]["current_node"] = reply["next"]
+		_show_current_node(frequency_id)
+	elif reply.get("end_dialogue", false):
+		GameManager.set_voice_modulation_value("INACTIVE")
+		end_dialogue(frequency_id)
+	else:
+		# If neither, just end dialogue for safety
+		GameManager.set_voice_modulation_value("INACTIVE")
+		end_dialogue(frequency_id)
+		
 # Check if all conditions on an object (node or reply) are satisfied
 func _check_conditions(obj: Dictionary) -> bool:
 	if not obj.has("conditions"):

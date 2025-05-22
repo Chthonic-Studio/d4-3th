@@ -86,22 +86,17 @@ func _ready():
 func _on_active_frequency_changed(new_id: int):
 	shown_frequency_id = new_id
 	_show_frequency_data(new_id)
-	active_frequency_id = new_id
 	_update_active_button()
 
 func _update_active_button():
-	active_frequency_button.visible = (shown_frequency_id != active_frequency_id)
+	active_frequency_button.visible = (shown_frequency_id != GameManager.current_frequency)
 
 func _on_go_to_active_frequency_button_pressed():
-	_show_frequency_data(active_frequency_id)
+	_show_frequency_data(GameManager.current_frequency)
 
 func _show_frequency_data(freq_id: int):
 	shown_frequency_id = freq_id
-	var freq = null
-	for f in GameManager.frequencies:
-		if f["id"] == freq_id:
-			freq = f
-			break
+	var freq = GameManager.get_frequency_by_id(freq_id)
 	# Clear old data entries...
 	for c in frequency_data_scroll.get_children():
 		c.queue_free()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=4 uid="uid://bx78ucsp7du5h"]
+[gd_scene load_steps=56 format=4 uid="uid://bx78ucsp7du5h"]
 
 [ext_resource type="Material" uid="uid://wwpwikc46ifu" path="res://assets/resources/swaying_trees.tres" id="1_4yyl0"]
 [ext_resource type="TileSet" uid="uid://bidtnsah5g5wl" path="res://assets/tilesets/Camp_Tileset.tres" id="1_jnl7h"]
@@ -24,9 +24,8 @@
 [ext_resource type="Texture2D" uid="uid://bdpskik4672qq" path="res://assets/images/ProgressBarInverse.png" id="11_u04fh"]
 [ext_resource type="Script" uid="uid://cwk4h3yectg48" path="res://scripts/UI/foundFrequencyVbox.gd" id="13_rx44x"]
 [ext_resource type="PackedScene" uid="uid://66dmulwa8dvg" path="res://scenes/common_room.tscn" id="21_wn4yt"]
-[ext_resource type="PackedScene" uid="uid://c38hxx2wqxig7" path="res://scenes/message_bubble.tscn" id="25_26nsp"]
 [ext_resource type="Script" uid="uid://bm51jm5hyci0d" path="res://scripts/UI/dialogue_ui.gd" id="25_rrr7h"]
-[ext_resource type="PackedScene" uid="uid://skx2jluixxnd" path="res://scenes/reply_option.tscn" id="26_rrr7h"]
+[ext_resource type="Texture2D" uid="uid://cqv1vru1c1amd" path="res://assets/images/dialogue.png" id="26_26nsp"]
 
 [sub_resource type="Gradient" id="Gradient_rbpqj"]
 offsets = PackedFloat32Array(0, 0.485531, 1)
@@ -1289,7 +1288,7 @@ anchor_bottom = 0.137457
 size_flags_vertical = 0
 theme_override_fonts/font = ExtResource("6_okuri")
 theme_override_font_sizes/font_size = 32
-text = "GLOBAL RESISTANCE DATA"
+text = "RESISTANCE STATUS"
 horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
@@ -1420,9 +1419,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="message_bubble" parent="dialogueBox/dialogue9Patch/dialogueScroll/dialogueVbox" instance=ExtResource("25_26nsp")]
-layout_mode = 2
-
 [node name="replyContainer" type="MarginContainer" parent="dialogueBox/dialogue9Patch"]
 layout_mode = 0
 offset_left = 128.0
@@ -1433,12 +1429,22 @@ offset_bottom = 326.0
 [node name="replyVbox" type="VBoxContainer" parent="dialogueBox/dialogue9Patch/replyContainer"]
 layout_mode = 2
 
-[node name="Label" parent="dialogueBox/dialogue9Patch/replyContainer/replyVbox" instance=ExtResource("26_rrr7h")]
-layout_mode = 2
-
 [node name="MarginContainer2" type="MarginContainer" parent="dialogueBox/dialogue9Patch"]
 layout_mode = 0
 offset_left = 27.0
 offset_top = 217.0
 offset_right = 124.0
 offset_bottom = 325.0
+
+[node name="closeDialogueUI" type="Button" parent="."]
+layout_mode = 0
+offset_left = 733.0
+offset_top = 538.0
+offset_right = 770.0
+offset_bottom = 576.0
+flat = true
+
+[node name="Sprite2D" type="Sprite2D" parent="closeDialogueUI"]
+position = Vector2(19, 19)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("26_26nsp")

@@ -10,6 +10,7 @@ signal frequencies_updated
 signal found_frequencies_updated
 signal voice_modulation_changed(modulation: String)
 signal listen_toggled
+signal reply_conditions_changed
 
 @onready var FrequencyOptions = preload("res://scripts/lists/frequencyOptions.gd").new()
 @onready var ThreatTraits = preload("res://scripts/lists/threatTraits.gd").new()
@@ -22,8 +23,10 @@ var threat_traits := []
 var personnel := []
 
 var listenOn: bool = false
+var replyOn: bool = false
+var micOn: bool = false
 
-var current_frequency: int
+var current_frequency: int 
 
 var frequency_update_interval = 0.4
 
@@ -48,11 +51,23 @@ func reset_game():
 	is_game_running = false
 	# Reset other systems
 
+func dialogue_conditions_changed():
+	emit_signal("reply_conditions_changed", replyOn, micOn)
+
 func signal_number_changed(frequency: int) -> void:
 	print("Active signal changed to: ", frequency)
 	emit_signal("frequency_changed", frequency)
 	emit_signal("frequency_changed_dialogue")
 	emit_signal("active_frequency_changed", frequency)
+
+func get_frequency_by_id(freq_id: int) -> Dictionary:
+	for f in frequencies:
+		if f["id"] == freq_id:
+			return f
+	for f in found_frequencies:
+		if f["id"] == freq_id:
+			return f
+	return {}
 
 func set_voice_modulation_value(modulation: String):
 	current_voice_modulation = modulation
@@ -64,10 +79,13 @@ func listenToggled():
 func initialize_run():
 	generate_threat_traits()
 	generate_frequencies()
+	current_frequency = 1001
 
 	# TESTING: Add 3 random found frequencies at game start
 	for i in range(3):
 		add_found_frequency()
+	await get_tree().process_frame
+	DialogueManager.start_dialogue(1001, "intro_commander")
 
 func generate_threat_traits():
 	print("Generating threat traits")
