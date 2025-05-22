@@ -27,7 +27,8 @@ func _on_active_frequency_changed(new_id: int):
 	_update_active_button()
 
 func _on_go_to_active_frequency_button_pressed():
-	_show_found_frequency_data(GameManager.current_frequency)
+	shown_frequency_id = GameManager.current_frequency
+	_show_found_frequency_data(shown_frequency_id)
 
 func _update_active_button():
 	active_frequency_button.visible = (shown_frequency_id != GameManager.current_frequency)

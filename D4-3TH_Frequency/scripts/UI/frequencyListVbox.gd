@@ -92,7 +92,9 @@ func _update_active_button():
 	active_frequency_button.visible = (shown_frequency_id != GameManager.current_frequency)
 
 func _on_go_to_active_frequency_button_pressed():
-	_show_frequency_data(GameManager.current_frequency)
+	shown_frequency_id = GameManager.current_frequency
+	_show_frequency_data(shown_frequency_id)
+	_update_active_button()
 
 func _show_frequency_data(freq_id: int):
 	shown_frequency_id = freq_id
@@ -139,7 +141,9 @@ func update_frequency_list(new_frequencies: Array) -> void:
 func _on_frequency_button_pressed(idx):
 	if idx >= frequencies.size(): return
 	var freq = frequencies[idx]
+	shown_frequency_id = freq["id"]
 	_show_frequency_data(freq["id"])
+	_update_active_button()
 
 func show_frequency_data(freq: Dictionary):
 	# Clear old data entries

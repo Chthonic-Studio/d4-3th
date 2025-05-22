@@ -25,6 +25,9 @@ extends MarginContainer
 @onready var found_frequency_list_vbox = $BPanel_LeftRect/FrequencyListContainer/FrequencyListRect/FoundFrequencyScroll
 @onready var known_button = $BPanel_LeftRect/FrequencyListContainer/FrequencyListRect/knownList
 @onready var found_button = $BPanel_LeftRect/FrequencyListContainer/FrequencyListRect/foundList
+
+signal dialogue_conditions_possibly_changed
+
 var showing_known_list := true
 
 # BOOLEANS #
@@ -96,18 +99,20 @@ func toggleReply():
 	reply_button.texture_normal = flipSwitch2On if replyOn else flipSwitch2Off
 	AudioManager.play_sfx(preload("res://assets/sfx/comm_mode_switch.mp3"))
 	GameManager.dialogue_conditions_changed()
+	emit_signal("dialogue_conditions_possibly_changed")
 	print("Reply Status is " + str(GameManager.replyOn))
 
 func toggleListen():
 	print("Toggling Listen")
 	listenOn = not listenOn
-	listen_button.texture_normal = flipSwitch2On if listenOn else flipSwitch2Off
-	AudioManager.play_sfx(preload("res://assets/sfx/comm_mode_switch.mp3"))
 	if listenOn == true:
 		GameManager.listenToggled()
 		GameManager.listenOn = true
 	else:
 		GameManager.listenOn = false
+	listen_button.texture_normal = flipSwitch2On if listenOn else flipSwitch2Off
+	AudioManager.play_sfx(preload("res://assets/sfx/comm_mode_switch.mp3"))
+	emit_signal("dialogue_conditions_possibly_changed")
 	print("Listen Status is " + str(GameManager.listenOn))
 	
 func toggleMic():
@@ -120,6 +125,7 @@ func toggleMic():
 	mic_button.texture_normal = flipSwitchOn if micOn else flipSwitchOff
 	AudioManager.play_sfx(preload("res://assets/sfx/mic_switch.mp3"))
 	GameManager.dialogue_conditions_changed()
+	emit_signal("dialogue_conditions_possibly_changed")
 	print("Mic Status is " + str(GameManager.micOn))
 	
 func increment_signal_digit(index: int) -> void:
@@ -134,22 +140,10 @@ func update_signal_numbers_display() -> void:
 	signalNumber3.text = str(signal_digits[2])
 	signalNumber4.text = str(signal_digits[3])
 
-func _on_dialogue_started(freq_id):
-	_set_frequency_change_enabled(false)
-
-func _on_dialogue_ended(freq_id):
-	_set_frequency_change_enabled(true)
-
-func _set_frequency_change_enabled(enabled: bool):
-	pass
-	#signalNumber1_button.disabled = not enabled
-	#signalNumber2_button.disabled = not enabled
-	#signalNumber3_button.disabled = not enabled
-	#signalNumber4_button.disabled = not enabled
-
 func frequency_changed() -> void:
 	var signal_id = int("%d%d%d%d" % signal_digits)
 	GameManager.signal_number_changed(signal_id)
+	emit_signal("dialogue_conditions_possibly_changed")
 
 func _on_frequency_changed(freq_id: int):
 	current_freq = null

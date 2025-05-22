@@ -1,27 +1,52 @@
 extends Node
 
 # USAGE
-# From DialogueManager when a reply sets a flag
-# EventsManager.set_flag("heard_distress_call")
-
-# From DialogueManager when a reply triggers a custom event
-# EventsManager.trigger_event("entity_mimic_detected", {"frequency_id": 1572})
-
-# To check a flag in dialogue conditions
-# EventsManager.get_flag("heard_distress_call")
-
-# To handle game progression save/load:
-# EventsManager.save_progression()
-# EventsManager.load_progression()
+# --- Flags ---
+# Set a global flag:
+#   EventsManager.set_flag("heard_distress_call")
+# Get a global flag:
+#   EventsManager.get_flag("heard_distress_call")
+#
+# Set a frequency-specific flag:
+#   EventsManager.set_frequency_flag(1234, "responded", true)
+# Get a frequency-specific flag:
+#   EventsManager.get_frequency_flag(1234, "responded")
+#
+# --- Dialogue Status ---
+# Set dialogue status (e.g., "onStandby", "waiting", "done", "lost", etc.):
+#   EventsManager.set_dialogue_status("intro_commander", "onStandby")
+# Get dialogue status:
+#   EventsManager.get_dialogue_status("intro_commander")
+#
+# --- Custom Events ---
+# Trigger a custom event (with optional payload):
+#   EventsManager.trigger_event("entity_mimic_detected", {"frequency_id": 1572})
+#
+# --- Persistence ---
+# Save all progression (flags and dialogue statuses):
+#   EventsManager.save_progression()
+# Load all progression:
+#   EventsManager.load_progression()
+# Reset all progression for a new run:
+#   EventsManager.reset_all()
+#
+# Save or load just dialogue status (rarely needed directly):
+#   EventsManager.save_dialogue_status()
+#   EventsManager.load_dialogue_status()
+#   EventsManager.reset_dialogue_status()
 
 signal flag_changed(flag_name: String, value: Variant)
 signal event_triggered(event_name: String, payload: Dictionary)
 signal progression_loaded()
 signal progression_saved()
+signal dialogue_status_changed(dialogue_id: String, status: String)
 
 # Flags/variables
-var global_flags := {}         # {flag_name: value}
-var frequency_flags := {}      # {frequency_id: {flag_name: value}}
+var global_flags := {}         	# {flag_name: value}
+var frequency_flags := {}      	# {frequency_id: {flag_name: value}}
+var dialogue_status := {}		# { dialogue_id: status }
+
+@export var dialogue_status_save_path := "user://dialogue_status.save"
 
 @export var save_path := "user://progression.save"
 
@@ -51,12 +76,43 @@ func get_frequency_flag(frequency_id: int, flag_name: String) -> Variant:
 func trigger_event(event_name: String, payload: Dictionary = {}):
 	emit_signal("event_triggered", event_name, payload)
 
+# Set dialogue status (call this whenever a status changes)
+func set_dialogue_status(dialogue_id: String, status: String):
+	dialogue_status[dialogue_id] = status
+	emit_signal("dialogue_status_changed", dialogue_id, status)
+	save_dialogue_status()
+
+# Get dialogue status
+func get_dialogue_status(dialogue_id: String) -> String:
+	return dialogue_status.get(dialogue_id, "off")
+
+# Save/load dialogue statuses (per run)
+func save_dialogue_status():
+	var file = FileAccess.open(dialogue_status_save_path, FileAccess.WRITE)
+	if file:
+		file.store_var(dialogue_status)
+		file.close()
+
+func load_dialogue_status():
+	if not FileAccess.file_exists(dialogue_status_save_path):
+		return
+	var file = FileAccess.open(dialogue_status_save_path, FileAccess.READ)
+	if file:
+		dialogue_status = file.get_var()
+		file.close()
+
+# Reset dialogue statuses for new run
+func reset_dialogue_status():
+	dialogue_status = {}
+	save_dialogue_status()
+
 # SAVE/LOAD
 
 func save_progression():
 	var data = {
 		"global_flags": global_flags,
-		"frequency_flags": frequency_flags
+		"frequency_flags": frequency_flags,
+		"dialogue_status": dialogue_status
 	}
 	var file = FileAccess.open(save_path, FileAccess.WRITE)
 	if file:
@@ -72,10 +128,14 @@ func load_progression():
 		var data = file.get_var()
 		global_flags = data.get("global_flags", {})
 		frequency_flags = data.get("frequency_flags", {})
+		dialogue_status = data.get("dialogue_status", {})
 		file.close()
 		emit_signal("progression_loaded")
 
 func reset_all():
 	global_flags = {}
 	frequency_flags = {}
+	dialogue_status = {}
 	save_progression()
+	
+	

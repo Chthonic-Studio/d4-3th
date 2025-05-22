@@ -56,6 +56,7 @@ func dialogue_conditions_changed():
 
 func signal_number_changed(frequency: int) -> void:
 	print("Active signal changed to: ", frequency)
+	current_frequency = frequency
 	emit_signal("frequency_changed", frequency)
 	emit_signal("frequency_changed_dialogue")
 	emit_signal("active_frequency_changed", frequency)
