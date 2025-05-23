@@ -1294,17 +1294,127 @@ vertical_alignment = 1
 uppercase = true
 metadata/_edit_use_anchors_ = true
 
-[node name="CameraFeedImage" type="MarginContainer" parent="."]
+[node name="CameraFeed" type="MarginContainer" parent="." node_paths=PackedStringArray("subviewports")]
 layout_mode = 0
-offset_left = 46.0
-offset_top = 201.0
-offset_right = 86.0
-offset_bottom = 241.0
+offset_top = 175.0
+offset_right = 450.0
+offset_bottom = 575.0
+script = ExtResource("8_r8eje")
+subviewports = [NodePath("CameraFeedRect/MainFeedContainer/MainFeedViewport"), NodePath("CameraFeedRect/SmallFeed1Container/SmallFeed1Viewport"), NodePath("CameraFeedRect/SmallFeed2Container/SmallFeed2Viewport"), NodePath("CameraFeedRect/SmallFeed3Container/SmallFeed3Viewport"), NodePath("CameraFeedRect/SmallFeed4Container/SmallFeed4Viewport"), NodePath("CameraFeedRect/EntityFeedContainer/EntityFeedViewport")]
 
-[node name="Control" type="Control" parent="CameraFeedImage"]
+[node name="CameraFeedRect" type="TextureRect" parent="CameraFeed"]
+layout_mode = 2
+texture = ExtResource("5_kyx1g")
+
+[node name="MainFeedContainer" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
+layout_mode = 0
+offset_left = 47.0
+offset_top = 25.0
+offset_right = 434.0
+offset_bottom = 275.0
+
+[node name="MainFeedViewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/MainFeedContainer"]
+size = Vector2i(387, 250)
+
+[node name="Common_Room" parent="CameraFeed/CameraFeedRect/MainFeedContainer/MainFeedViewport" instance=ExtResource("21_wn4yt")]
+position = Vector2(-12, 1)
+
+[node name="SmallFeed1Container" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
+custom_minimum_size = Vector2(56, 60)
+layout_mode = 0
+offset_left = 40.0
+offset_top = 336.0
+offset_right = 96.0
+offset_bottom = 396.0
+
+[node name="SmallFeed1Viewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/SmallFeed1Container"]
+size = Vector2i(56, 60)
+
+[node name="Common_Room" parent="CameraFeed/CameraFeedRect/SmallFeed1Container/SmallFeed1Viewport" instance=ExtResource("21_wn4yt")]
+
+[node name="SmallFeed1Button" type="Button" parent="CameraFeed/CameraFeedRect/SmallFeed1Container"]
+custom_minimum_size = Vector2(56, 60)
+layout_mode = 2
+flat = true
+
+[node name="SmallFeed2Container" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
+custom_minimum_size = Vector2(56, 60)
+offset_left = 98.0
+offset_top = 336.0
+offset_right = 154.0
+offset_bottom = 396.0
+
+[node name="SmallFeed2Viewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/SmallFeed2Container"]
+handle_input_locally = false
+size = Vector2i(56, 60)
+render_target_update_mode = 4
+
+[node name="SmallFeed2Button" type="Button" parent="CameraFeed/CameraFeedRect/SmallFeed2Container"]
+custom_minimum_size = Vector2(56, 60)
+layout_mode = 2
+flat = true
+
+[node name="SmallFeed3Container" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
+custom_minimum_size = Vector2(56, 60)
+offset_left = 156.0
+offset_top = 336.0
+offset_right = 212.0
+offset_bottom = 396.0
+
+[node name="SmallFeed3Viewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/SmallFeed3Container"]
+handle_input_locally = false
+size = Vector2i(56, 60)
+render_target_update_mode = 4
+
+[node name="SmallFeed3Button" type="Button" parent="CameraFeed/CameraFeedRect/SmallFeed3Container"]
+custom_minimum_size = Vector2(56, 60)
+layout_mode = 2
+flat = true
+
+[node name="SmallFeed4Container" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
+custom_minimum_size = Vector2(56, 60)
+offset_left = 215.0
+offset_top = 335.0
+offset_right = 271.0
+offset_bottom = 395.0
+
+[node name="SmallFeed4Viewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/SmallFeed4Container"]
+handle_input_locally = false
+size = Vector2i(56, 60)
+render_target_update_mode = 4
+
+[node name="SmallFeed4Button" type="Button" parent="CameraFeed/CameraFeedRect/SmallFeed4Container"]
+custom_minimum_size = Vector2(56, 60)
+layout_mode = 2
+flat = true
+
+[node name="EntityFeedContainer" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
+layout_mode = 0
+offset_left = 303.0
+offset_top = 307.0
+offset_right = 433.0
+offset_bottom = 397.0
+
+[node name="EntityFeedViewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/EntityFeedContainer"]
+size = Vector2i(130, 90)
+
+[node name="EntityFeedButton" type="Button" parent="CameraFeed/CameraFeedRect/EntityFeedContainer"]
+custom_minimum_size = Vector2(130, 90)
+layout_mode = 2
+flat = true
+
+[node name="FeedNameLabel" type="Label" parent="CameraFeed/CameraFeedRect"]
+layout_mode = 0
+offset_left = 285.0
+offset_top = 43.0
+offset_right = 417.0
+offset_bottom = 66.0
+text = "COMMON ROOM"
+
+[node name="CameraButtons" type="Control" parent="CameraFeed"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="CameraFeedImage/Control"]
+[node name="Button" type="Button" parent="CameraFeed/CameraButtons"]
 modulate = Color(0.06, 1, 0.357667, 1)
 self_modulate = Color(25.415, 19.889, 1.105, 0.685)
 layout_mode = 0
@@ -1313,7 +1423,7 @@ offset_top = 459.0
 offset_right = 874.0
 offset_bottom = 467.0
 
-[node name="Button7" type="Button" parent="CameraFeedImage/Control"]
+[node name="Button7" type="Button" parent="CameraFeed/CameraButtons"]
 modulate = Color(0.06, 1, 0.357667, 1)
 self_modulate = Color(25.415, 19.889, 1.105, 0.685)
 layout_mode = 0
@@ -1322,7 +1432,7 @@ offset_top = 267.0
 offset_right = 336.0
 offset_bottom = 275.0
 
-[node name="Button6" type="Button" parent="CameraFeedImage/Control"]
+[node name="Button6" type="Button" parent="CameraFeed/CameraButtons"]
 modulate = Color(0.06, 1, 0.357667, 1)
 self_modulate = Color(25.415, 19.889, 1.105, 0.685)
 layout_mode = 0
@@ -1331,7 +1441,7 @@ offset_top = 285.0
 offset_right = 208.0
 offset_bottom = 293.0
 
-[node name="Button5" type="Button" parent="CameraFeedImage/Control"]
+[node name="Button5" type="Button" parent="CameraFeed/CameraButtons"]
 modulate = Color(0.06, 1, 0.357667, 1)
 self_modulate = Color(25.415, 19.889, 1.105, 0.685)
 layout_mode = 0
@@ -1340,7 +1450,7 @@ offset_top = 285.0
 offset_right = 145.0
 offset_bottom = 293.0
 
-[node name="Button4" type="Button" parent="CameraFeedImage/Control"]
+[node name="Button4" type="Button" parent="CameraFeed/CameraButtons"]
 modulate = Color(0.06, 1, 0.357667, 1)
 self_modulate = Color(25.415, 19.889, 1.105, 0.685)
 layout_mode = 0
@@ -1349,7 +1459,7 @@ offset_top = 286.0
 offset_right = 90.0
 offset_bottom = 294.0
 
-[node name="Button3" type="Button" parent="CameraFeedImage/Control"]
+[node name="Button3" type="Button" parent="CameraFeed/CameraButtons"]
 modulate = Color(0.06, 1, 0.357667, 1)
 self_modulate = Color(25.415, 19.889, 1.105, 0.685)
 layout_mode = 0
@@ -1358,7 +1468,7 @@ offset_top = 286.0
 offset_right = 29.0
 offset_bottom = 294.0
 
-[node name="Button2" type="Button" parent="CameraFeedImage/Control"]
+[node name="Button2" type="Button" parent="CameraFeed/CameraButtons"]
 modulate = Color(0.06, 1, 0.357667, 1)
 self_modulate = Color(25.415, 19.889, 1.105, 0.685)
 layout_mode = 0
@@ -1366,19 +1476,6 @@ offset_left = 179.0
 offset_top = -15.0
 offset_right = 195.0
 offset_bottom = -7.0
-
-[node name="Common_Room" parent="CameraFeedImage" instance=ExtResource("21_wn4yt")]
-
-[node name="CameraFeed" type="MarginContainer" parent="."]
-layout_mode = 0
-offset_top = 175.0
-offset_right = 450.0
-offset_bottom = 575.0
-script = ExtResource("8_r8eje")
-
-[node name="CameraFeedRect" type="TextureRect" parent="CameraFeed"]
-layout_mode = 2
-texture = ExtResource("5_kyx1g")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_r8eje")
@@ -1448,3 +1545,9 @@ flat = true
 position = Vector2(19, 19)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("26_26nsp")
+
+[connection signal="pressed" from="CameraFeed/CameraFeedRect/SmallFeed1Container/SmallFeed1Button" to="CameraFeed" method="_on_small_feed_1_pressed"]
+[connection signal="pressed" from="CameraFeed/CameraFeedRect/SmallFeed2Container/SmallFeed2Button" to="CameraFeed" method="_on_small_feed_2_pressed"]
+[connection signal="pressed" from="CameraFeed/CameraFeedRect/SmallFeed3Container/SmallFeed3Button" to="CameraFeed" method="_on_small_feed_3_pressed"]
+[connection signal="pressed" from="CameraFeed/CameraFeedRect/SmallFeed4Container/SmallFeed4Button" to="CameraFeed" method="_on_small_feed_4_pressed"]
+[connection signal="pressed" from="CameraFeed/CameraFeedRect/EntityFeedContainer/EntityFeedButton" to="CameraFeed" method="_on_small_feed_5_pressed"]
