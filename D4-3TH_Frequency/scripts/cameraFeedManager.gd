@@ -35,11 +35,14 @@ var _big_feed_id: String = FEEDS[0].id
 var _feed_scene_instances := {}  # feed_id: scene instance
 var _feed_viewports := {}        # feed_id: Viewport
 
+var _feeds_loaded := 0
+
 ## Called when the node is added to the scene.
 func _ready():
 	# Initial assignment: first feed is big, the rest are small (order as in FEEDS)
 	_init_feed_viewports()
 	_load_all_feeds()
+	connect("feed_scene_loaded", Callable(self, "_on_feed_scene_loaded"))
 	
 func register_viewports(main_feed: Viewport, small_feeds: Array[Viewport]):
 	main_feed_viewport = main_feed
@@ -123,6 +126,12 @@ func _free_all_scenes():
 		if instance and instance.is_inside_tree():
 			instance.queue_free()
 	_feed_scene_instances.clear()
+	
+func _on_feed_scene_loaded(feed_id, scene_instance):
+	_feeds_loaded += 1
+	if _feeds_loaded == FEEDS.size():
+		# All feeds are loaded, safe to spawn NPCs now
+		NPCManager.spawn_all_npcs_at_game_start()
 
 ## Updates which Viewports are assigned to the main and small feeds.
 func _update_viewport_assignments():

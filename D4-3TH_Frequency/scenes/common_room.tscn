@@ -2,6 +2,14 @@
 
 [ext_resource type="TileSet" uid="uid://bidtnsah5g5wl" path="res://assets/tilesets/Camp_Tileset.tres" id="1_raxyv"]
 
+[sub_resource type="Gradient" id="Gradient_aetbp"]
+offsets = PackedFloat32Array(0, 0.231511, 0.5209, 0.778135, 0.990354)
+colors = PackedColorArray(0, 0, 0, 0, 0.63, 0.63, 0.63, 0.121569, 1, 1, 1, 0.392157, 1, 1, 1, 0.117647, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_q3uuu"]
+gradient = SubResource("Gradient_aetbp")
+fill = 1
+
 [sub_resource type="Gradient" id="Gradient_raxyv"]
 offsets = PackedFloat32Array(0, 0.829582, 1)
 colors = PackedColorArray(0, 0, 0, 1, 0.466238, 0.466238, 0.466238, 1, 1, 1, 1, 1)
@@ -9,15 +17,19 @@ colors = PackedColorArray(0, 0, 0, 1, 0.466238, 0.466238, 0.466238, 1, 1, 1, 1, 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_lybfh"]
 gradient = SubResource("Gradient_raxyv")
 
-[sub_resource type="Gradient" id="Gradient_aetbp"]
-offsets = PackedFloat32Array(0.0321543, 0.498392, 1)
-colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 0.313726, 1, 1, 1, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_q3uuu"]
-gradient = SubResource("Gradient_aetbp")
-fill = 1
-
 [node name="Common_Room" type="Node2D"]
+
+[node name="PointLight2D2" type="PointLight2D" parent="."]
+position = Vector2(395, 197)
+rotation = 2.53019
+scale = Vector2(2.46341, 1.87585)
+color = Color(0.639216, 0.960784, 1, 1)
+energy = 7.2
+shadow_enabled = true
+shadow_color = Color(0, 0, 0, 0.972549)
+texture = SubResource("GradientTexture2D_q3uuu")
+offset = Vector2(10, 0)
+height = 85.0
 
 [node name="Control" type="Control" parent="."]
 custom_minimum_size = Vector2(390, 250)
@@ -32,6 +44,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 8.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -67,13 +80,8 @@ texture = SubResource("GradientTexture1D_lybfh")
 texture_scale = 2.09
 height = 45.0
 
-[node name="PointLight2D2" type="PointLight2D" parent="."]
-position = Vector2(371, 198)
-rotation = 2.53019
-scale = Vector2(2.29794, 1.49609)
-color = Color(0.639216, 0.960784, 1, 1)
-energy = 5.28
-blend_mode = 2
-texture = SubResource("GradientTexture2D_q3uuu")
-offset = Vector2(10, 0)
-height = 85.0
+[node name="spawn_common" type="Node2D" parent="."]
+position = Vector2(-33, 214)
+
+[node name="spawn_common1" type="Node2D" parent="."]
+position = Vector2(433, 200)

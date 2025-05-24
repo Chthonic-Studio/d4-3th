@@ -82,6 +82,9 @@ func initialize_run():
 	generate_frequencies()
 	current_frequency = 1001
 
+func spawn_npcs():
+	NPCManager.spawn_all_npcs_at_game_start()
+
 	# TESTING: Add 3 random found frequencies at game start
 	for i in range(3):
 		add_found_frequency()

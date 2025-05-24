@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Role" load_steps=2 format=3 uid="uid://rjqih1o3k3be"]
+
+[ext_resource type="Script" uid="uid://ckrbp8fc2tpny" path="res://scripts/npc/role.gd" id="1_vyykn"]
+
+[resource]
+script = ExtResource("1_vyykn")
+id = "entity"
+description = "A mimic with the form of a human soldier"
+metadata/_custom_type_script = "uid://ckrbp8fc2tpny"

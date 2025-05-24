@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="StateMachine" load_steps=2 format=3 uid="uid://ygcj6cfkggux"]
+
+[ext_resource type="Script" uid="uid://c70hd0foog1hm" path="res://scripts/npc/state_machines/state_machine.gd" id="1_p6a4k"]
+
+[resource]
+script = ExtResource("1_p6a4k")
+state = "moving"
+state_data = {}
+metadata/_custom_type_script = "uid://c70hd0foog1hm"

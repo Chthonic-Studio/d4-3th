@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=4 uid="uid://bx78ucsp7du5h"]
+[gd_scene load_steps=60 format=4 uid="uid://bx78ucsp7du5h"]
 
 [ext_resource type="Material" uid="uid://wwpwikc46ifu" path="res://assets/resources/swaying_trees.tres" id="1_4yyl0"]
 [ext_resource type="TileSet" uid="uid://bidtnsah5g5wl" path="res://assets/tilesets/Camp_Tileset.tres" id="1_jnl7h"]
@@ -24,8 +24,12 @@
 [ext_resource type="Texture2D" uid="uid://bdpskik4672qq" path="res://assets/images/ProgressBarInverse.png" id="11_u04fh"]
 [ext_resource type="Script" uid="uid://cwk4h3yectg48" path="res://scripts/UI/foundFrequencyVbox.gd" id="13_rx44x"]
 [ext_resource type="PackedScene" uid="uid://66dmulwa8dvg" path="res://scenes/common_room.tscn" id="21_wn4yt"]
+[ext_resource type="PackedScene" uid="uid://8f11j77nx4hv" path="res://scenes/barracks.tscn" id="24_o81xr"]
+[ext_resource type="PackedScene" uid="uid://bqjv402gnqdmu" path="res://scenes/storage.tscn" id="25_kvlnv"]
 [ext_resource type="Script" uid="uid://bm51jm5hyci0d" path="res://scripts/UI/dialogue_ui.gd" id="25_rrr7h"]
 [ext_resource type="Texture2D" uid="uid://cqv1vru1c1amd" path="res://assets/images/dialogue.png" id="26_26nsp"]
+[ext_resource type="PackedScene" uid="uid://cingq33dkeyhi" path="res://scenes/entrance.tscn" id="26_o3ev5"]
+[ext_resource type="PackedScene" uid="uid://cgfn0qhb2jc6b" path="res://scenes/creature.tscn" id="27_whs7n"]
 
 [sub_resource type="Gradient" id="Gradient_rbpqj"]
 offsets = PackedFloat32Array(0, 0.485531, 1)
@@ -312,6 +316,15 @@ tile_set = ExtResource("1_jnl7h")
 material = ExtResource("1_4yyl0")
 position = Vector2(661, 90)
 texture = ExtResource("8_rrr7h")
+
+[node name="spawn_background" type="Node2D" parent="Tilemap"]
+position = Vector2(815, 134)
+
+[node name="spawn_background2" type="Node2D" parent="Tilemap"]
+position = Vector2(379, 124)
+
+[node name="spawn_background3" type="Node2D" parent="Tilemap"]
+position = Vector2(548, 126)
 
 [node name="TopPanel" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(0, 175)
@@ -1302,6 +1315,72 @@ offset_bottom = 575.0
 script = ExtResource("8_r8eje")
 subviewports = [NodePath("CameraFeedRect/MainFeedContainer/MainFeedViewport"), NodePath("CameraFeedRect/SmallFeed1Container/SmallFeed1Viewport"), NodePath("CameraFeedRect/SmallFeed2Container/SmallFeed2Viewport"), NodePath("CameraFeedRect/SmallFeed3Container/SmallFeed3Viewport"), NodePath("CameraFeedRect/SmallFeed4Container/SmallFeed4Viewport"), NodePath("CameraFeedRect/EntityFeedContainer/EntityFeedViewport")]
 
+[node name="CameraButtons" type="Control" parent="CameraFeed"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="CameraFeed/CameraButtons"]
+modulate = Color(0.06, 1, 0.357667, 1)
+self_modulate = Color(25.415, 19.889, 1.105, 0.685)
+layout_mode = 0
+offset_left = 912.0
+offset_top = 489.0
+offset_right = 920.0
+offset_bottom = 497.0
+
+[node name="Button7" type="Button" parent="CameraFeed/CameraButtons"]
+modulate = Color(0.06, 1, 0.357667, 1)
+self_modulate = Color(25.415, 19.889, 1.105, 0.685)
+layout_mode = 0
+offset_left = 357.0
+offset_top = 295.0
+offset_right = 381.0
+offset_bottom = 303.0
+
+[node name="Button6" type="Button" parent="CameraFeed/CameraButtons"]
+modulate = Color(0.06, 1, 0.357667, 1)
+self_modulate = Color(25.415, 19.889, 1.105, 0.685)
+layout_mode = 0
+offset_left = 59.0
+offset_top = 311.0
+offset_right = 75.0
+offset_bottom = 319.0
+
+[node name="Button5" type="Button" parent="CameraFeed/CameraButtons"]
+modulate = Color(0.06, 1, 0.357667, 1)
+self_modulate = Color(25.415, 19.889, 1.105, 0.685)
+layout_mode = 0
+offset_left = 121.0
+offset_top = 311.0
+offset_right = 137.0
+offset_bottom = 319.0
+
+[node name="Button4" type="Button" parent="CameraFeed/CameraButtons"]
+modulate = Color(0.06, 1, 0.357667, 1)
+self_modulate = Color(25.415, 19.889, 1.105, 0.685)
+layout_mode = 0
+offset_left = 176.0
+offset_top = 309.0
+offset_right = 192.0
+offset_bottom = 317.0
+
+[node name="Button3" type="Button" parent="CameraFeed/CameraButtons"]
+modulate = Color(0.06, 1, 0.357667, 1)
+self_modulate = Color(25.415, 19.889, 1.105, 0.685)
+layout_mode = 0
+offset_left = 238.0
+offset_top = 309.0
+offset_right = 254.0
+offset_bottom = 317.0
+
+[node name="Button2" type="Button" parent="CameraFeed/CameraButtons"]
+modulate = Color(0.06, 1, 0.357667, 1)
+self_modulate = Color(25.415, 19.889, 1.105, 0.685)
+layout_mode = 0
+offset_left = 227.0
+offset_top = 11.0
+offset_right = 243.0
+offset_bottom = 19.0
+
 [node name="CameraFeedRect" type="TextureRect" parent="CameraFeed"]
 layout_mode = 2
 texture = ExtResource("5_kyx1g")
@@ -1314,7 +1393,9 @@ offset_right = 434.0
 offset_bottom = 275.0
 
 [node name="MainFeedViewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/MainFeedContainer"]
+handle_input_locally = false
 size = Vector2i(387, 250)
+render_target_update_mode = 4
 
 [node name="Common_Room" parent="CameraFeed/CameraFeedRect/MainFeedContainer/MainFeedViewport" instance=ExtResource("21_wn4yt")]
 position = Vector2(-12, 1)
@@ -1328,7 +1409,11 @@ offset_right = 96.0
 offset_bottom = 396.0
 
 [node name="SmallFeed1Viewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/SmallFeed1Container"]
+handle_input_locally = false
 size = Vector2i(56, 60)
+size_2d_override = Vector2i(390, 250)
+size_2d_override_stretch = true
+render_target_update_mode = 4
 
 [node name="Common_Room" parent="CameraFeed/CameraFeedRect/SmallFeed1Container/SmallFeed1Viewport" instance=ExtResource("21_wn4yt")]
 
@@ -1339,6 +1424,7 @@ flat = true
 
 [node name="SmallFeed2Container" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
 custom_minimum_size = Vector2(56, 60)
+layout_mode = 0
 offset_left = 98.0
 offset_top = 336.0
 offset_right = 154.0
@@ -1347,7 +1433,11 @@ offset_bottom = 396.0
 [node name="SmallFeed2Viewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/SmallFeed2Container"]
 handle_input_locally = false
 size = Vector2i(56, 60)
+size_2d_override = Vector2i(390, 250)
+size_2d_override_stretch = true
 render_target_update_mode = 4
+
+[node name="Barracks" parent="CameraFeed/CameraFeedRect/SmallFeed2Container/SmallFeed2Viewport" instance=ExtResource("24_o81xr")]
 
 [node name="SmallFeed2Button" type="Button" parent="CameraFeed/CameraFeedRect/SmallFeed2Container"]
 custom_minimum_size = Vector2(56, 60)
@@ -1356,6 +1446,7 @@ flat = true
 
 [node name="SmallFeed3Container" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
 custom_minimum_size = Vector2(56, 60)
+layout_mode = 0
 offset_left = 156.0
 offset_top = 336.0
 offset_right = 212.0
@@ -1364,7 +1455,11 @@ offset_bottom = 396.0
 [node name="SmallFeed3Viewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/SmallFeed3Container"]
 handle_input_locally = false
 size = Vector2i(56, 60)
+size_2d_override = Vector2i(390, 250)
+size_2d_override_stretch = true
 render_target_update_mode = 4
+
+[node name="Common_Room" parent="CameraFeed/CameraFeedRect/SmallFeed3Container/SmallFeed3Viewport" instance=ExtResource("25_kvlnv")]
 
 [node name="SmallFeed3Button" type="Button" parent="CameraFeed/CameraFeedRect/SmallFeed3Container"]
 custom_minimum_size = Vector2(56, 60)
@@ -1373,6 +1468,7 @@ flat = true
 
 [node name="SmallFeed4Container" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
 custom_minimum_size = Vector2(56, 60)
+layout_mode = 0
 offset_left = 215.0
 offset_top = 335.0
 offset_right = 271.0
@@ -1381,7 +1477,11 @@ offset_bottom = 395.0
 [node name="SmallFeed4Viewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/SmallFeed4Container"]
 handle_input_locally = false
 size = Vector2i(56, 60)
+size_2d_override = Vector2i(390, 250)
+size_2d_override_stretch = true
 render_target_update_mode = 4
+
+[node name="Bedroom" parent="CameraFeed/CameraFeedRect/SmallFeed4Container/SmallFeed4Viewport" instance=ExtResource("26_o3ev5")]
 
 [node name="SmallFeed4Button" type="Button" parent="CameraFeed/CameraFeedRect/SmallFeed4Container"]
 custom_minimum_size = Vector2(56, 60)
@@ -1396,7 +1496,13 @@ offset_right = 433.0
 offset_bottom = 397.0
 
 [node name="EntityFeedViewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/EntityFeedContainer"]
+handle_input_locally = false
 size = Vector2i(130, 90)
+size_2d_override = Vector2i(390, 250)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="Bedroom" parent="CameraFeed/CameraFeedRect/EntityFeedContainer/EntityFeedViewport" instance=ExtResource("27_whs7n")]
 
 [node name="EntityFeedButton" type="Button" parent="CameraFeed/CameraFeedRect/EntityFeedContainer"]
 custom_minimum_size = Vector2(130, 90)
@@ -1405,77 +1511,16 @@ flat = true
 
 [node name="FeedNameLabel" type="Label" parent="CameraFeed/CameraFeedRect"]
 layout_mode = 0
-offset_left = 285.0
-offset_top = 43.0
-offset_right = 417.0
-offset_bottom = 66.0
+offset_left = 242.0
+offset_top = 44.0
+offset_right = 431.0
+offset_bottom = 72.0
+theme_override_constants/line_spacing = -15
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("6_okuri")
+theme_override_font_sizes/font_size = 25
 text = "COMMON ROOM"
-
-[node name="CameraButtons" type="Control" parent="CameraFeed"]
-layout_mode = 2
-
-[node name="Button" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 866.0
-offset_top = 459.0
-offset_right = 874.0
-offset_bottom = 467.0
-
-[node name="Button7" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 312.0
-offset_top = 267.0
-offset_right = 336.0
-offset_bottom = 275.0
-
-[node name="Button6" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 192.0
-offset_top = 285.0
-offset_right = 208.0
-offset_bottom = 293.0
-
-[node name="Button5" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 129.0
-offset_top = 285.0
-offset_right = 145.0
-offset_bottom = 293.0
-
-[node name="Button4" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 74.0
-offset_top = 286.0
-offset_right = 90.0
-offset_bottom = 294.0
-
-[node name="Button3" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 13.0
-offset_top = 286.0
-offset_right = 29.0
-offset_bottom = 294.0
-
-[node name="Button2" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 179.0
-offset_top = -15.0
-offset_right = 195.0
-offset_bottom = -7.0
+horizontal_alignment = 2
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_r8eje")

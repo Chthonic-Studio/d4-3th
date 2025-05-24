@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Personality" load_steps=2 format=3 uid="uid://d1m78jeidkmyn"]
+
+[ext_resource type="Script" uid="uid://iui4kbx1o4ew" path="res://scripts/npc/personality.gd" id="1_ylfh7"]
+
+[resource]
+script = ExtResource("1_ylfh7")
+id = "roamer"
+description = "Moves around the base frequently"
+metadata/_custom_type_script = "uid://iui4kbx1o4ew"

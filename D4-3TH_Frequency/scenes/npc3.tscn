@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://buq2rfajyc1fn"]
+
+[ext_resource type="Script" uid="uid://jxkp5utb46hm" path="res://scripts/npc/npc.gd" id="1_gkp7w"]
+[ext_resource type="SpriteFrames" uid="uid://cc0ihl0xpludt" path="res://assets/images/sprites/soldier3/soldier3_spriteFrame.tres" id="2_gkp7w"]
+
+[node name="Npc1" type="Node2D"]
+script = ExtResource("1_gkp7w")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.3, 0.3)
+sprite_frames = ExtResource("2_gkp7w")
+animation = &"walking"
+frame_progress = 0.409221

@@ -50,6 +50,8 @@ var dialogue_status := {}		# { dialogue_id: status }
 
 @export var save_path := "user://progression.save"
 
+var camera_feed: Node = null
+
 # Set a global flag/variable
 func set_flag(flag_name: String, value: Variant = true):
 	global_flags[flag_name] = value
@@ -105,6 +107,19 @@ func load_dialogue_status():
 func reset_dialogue_status():
 	dialogue_status = {}
 	save_dialogue_status()
+
+# Scene nodes call this to register themselves for events
+
+func _on_main_feed_changed(index, metadata):
+	# Print or trigger something when player watches a specific feed
+	# Example
+	# if metadata.has("id") and metadata.id == "entrance":
+		#print("Player is now watching the entrance!")
+	pass	
+
+func register_camera_feed(node: Node):
+	camera_feed = node
+	node.connect("main_feed_changed", Callable(self, "_on_main_feed_changed"))
 
 # SAVE/LOAD
 
