@@ -108,19 +108,6 @@ func reset_dialogue_status():
 	dialogue_status = {}
 	save_dialogue_status()
 
-# Scene nodes call this to register themselves for events
-
-func _on_main_feed_changed(index, metadata):
-	# Print or trigger something when player watches a specific feed
-	# Example
-	# if metadata.has("id") and metadata.id == "entrance":
-		#print("Player is now watching the entrance!")
-	pass	
-
-func register_camera_feed(node: Node):
-	camera_feed = node
-	node.connect("main_feed_changed", Callable(self, "_on_main_feed_changed"))
-
 # SAVE/LOAD
 
 func save_progression():

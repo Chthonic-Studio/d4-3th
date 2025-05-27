@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="StateMachine" load_steps=2 format=3 uid="uid://d2balpdiopnfa"]
+
+[ext_resource type="Script" uid="uid://c70hd0foog1hm" path="res://scripts/npc/state_machines/npc_state_machine.gd" id="1_0obab"]
+
+[resource]
+script = ExtResource("1_0obab")
+state = "idle"
+state_data = {}
+metadata/_custom_type_script = "uid://c70hd0foog1hm"

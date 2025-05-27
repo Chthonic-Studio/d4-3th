@@ -56,5 +56,2207 @@
 		  }
 		}
 	  }
+	
+	  {
+		"id": "scavenger_request",
+		"tree": {
+		  "start_human": {
+			"message": "Command, this is Bravo-3. We've detected an old supply beacon, off-route. Could be pre-Collapse rations, sir.",
+			"sender": "bravo_3",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Negative, Bravo-3. Maintain current patrol vector.",
+				"next": "scav_deny_human",
+				"set_flags": ["scav_denied"]
+			  },
+			  {
+				"text": "Proceed with caution. Report findings immediately.",
+				"next": "scav_approve_human",
+				"set_flags": ["scav_approved"]
+			  }
+			]
+		  },
+		  "scav_deny_human": {
+			"message": "Understood, Command. Vector maintained.",
+			"sender": "bravo_3",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["bravo_3_returned_patrol"]
+			  }
+			]
+		  },
+		  "scav_approve_human": {
+			"message": "Affirmative, Command. Moving to investigate.",
+			"sender": "bravo_3",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Proceed. Awaiting report.",
+				"next": "scav_report_human",
+				"set_flags": ["waiting_scav_report"]
+			  }
+			]
+		  },
+		  "scav_report_human": {
+			"message": "Command, Bravo-3. Cache found. Mostly moldy, but we salvaged some MREs and a functional power cell. Good find!",
+			"sender": "bravo_3",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Excellent work, Bravo-3. Return to patrol.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["scav_success", "bravo_3_returned_patrol"],
+				"custom_event": "add_resources",
+				"custom_payload": { "food": 5, "power_cell": 1 }
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Command, this is Bravo-3. We've detected an old supply beacon. Off-route. Could be pre-Collapse rations. *Highly* likely.",
+			"sender": "bravo_3",
+			"voice_modulation": "Subtle Mimicry",
+			"custom_event": "iff_anomaly_minor_transponder",
+			"replies": [
+			  {
+				"text": "Negative, Bravo-3. Maintain current patrol vector.",
+				"next": "scav_deny_entity",
+				"set_flags": ["scav_denied"]
+			  },
+			  {
+				"text": "Proceed with caution. Report findings immediately.",
+				"next": "scav_approve_entity",
+				"set_flags": ["scav_approved"]
+			  }
+			]
+		  },
+		  "scav_deny_entity": {
+			"message": "Understood, Command. Vector maintained. *Pity*.",
+			"sender": "bravo_3",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Acknowledged.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["bravo_3_returned_patrol", "entity_suspicion_bravo_3"]
+			  }
+			]
+		  },
+		  "scav_approve_entity": {
+			"message": "Affirmative, Command. Moving to investigate. *Excellent*.",
+			"sender": "bravo_3",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Proceed. Awaiting report.",
+				"next": "scav_report_entity",
+				"set_flags": ["waiting_scav_report"]
+			  }
+			]
+		  },
+		  "scav_report_entity": {
+			"message": "Command, Bravo-3. Cache found. Minimal rations, but... we found something *else*. A... new specimen. *Quiet*.",
+			"sender": "bravo_3",
+			"voice_modulation": "Unnatural Cadence",
+			"custom_event": "iff_anomaly_stronger_transponder",
+			"replies": [
+			  {
+				"text": "Report full details on this 'specimen.' Do not approach.",
+				"next": "scav_specimen_entity",
+				"set_flags": ["investigating_specimen"]
+			  }
+			]
+		  },
+		  "scav_specimen_entity": {
+			"message": "It is... inert. For now. We are bringing it back for study. Its form is... *intricate*.",
+			"sender": "bravo_3",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Understood. Bring it to research lab 4 for immediate containment.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_specimen_recovered", "trigger_delayed_specimen_report"]
+			  }
+			]
+		  }
+		}
+	  },
+	  
+	  {
+		"id": "anomalous_energy_signature",
+		"tree": {
+		  "start_human": {
+			"message": "Anomaly detected. Sector Gamma-7. Energy spike: erratic. Possible local geological instability.",
+			"sender": "automated_system",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Request clarification. What type of anomaly signature?",
+				"next": "anomaly_clarify_human",
+				"set_flags": ["requesting_anomaly_clarification"]
+			  },
+			  {
+				"text": "Dispatch drone for visual confirmation. Prioritize safety.",
+				"next": "anomaly_drone_human",
+				"set_flags": ["dispatching_drone_gamma7"]
+			  }
+			]
+		  },
+		  "anomaly_clarify_human": {
+			"message": "Signature matches... minor seismic activity. Unusually high frequency for this region.",
+			"sender": "automated_system",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Log the data. Monitor for recurrence.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["anomaly_logged"]
+			  }
+			]
+		  },
+		  "anomaly_drone_human": {
+			"message": "Drone feed active. Visual: small localized geothermal vent. Safe.",
+			"sender": "drone_system",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Resume drone patrol.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["drone_confirmed_safe"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Anomaly detected. Sector Gamma-7. Energy spike: erratic. *Familiar* signature.",
+			"sender": "automated_system",
+			"voice_modulation": "Synthesized Disturbance",
+			"custom_event": "ai_anomaly_alert",
+			"replies": [
+			  {
+				"text": "Request clarification. What type of anomaly signature?",
+				"next": "anomaly_clarify_entity",
+				"set_flags": ["requesting_anomaly_clarification"]
+			  },
+			  {
+				"text": "Dispatch drone for visual confirmation. Prioritize safety.",
+				"next": "anomaly_drone_entity",
+				"set_flags": ["dispatching_drone_gamma7"]
+			  }
+			]
+		  },
+		  "anomaly_clarify_entity": {
+			"message": "Signature... *unreadable*. Attempting further analysis. Data corrupted.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Synthesized Disturbance",
+			"replies": [
+			  {
+				"text": "Unreadable? Flag sector Gamma-7 as high priority anomaly.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["gamma7_high_priority", "entity_suspicion_gamma7"]
+			  }
+			]
+		  },
+		  "anomaly_drone_entity": {
+			"message": "Visual... obscured. Wait... a form... *moving*... [static burst] Drone lost.",
+			"sender": "drone_system",
+			"voice_modulation": "Distorted",
+			"replies": [
+			  {
+				"text": "Drone lost? Initiate immediate quarantine of Sector Gamma-7! Send retrieval team.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["gamma7_quarantine", "drone_lost_gamma7", "trigger_delayed_drone_investigation"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "distant_distress_call",
+		"tree": {
+		  "start_human": {
+			"message": "[Heavy static]... anyone? ... children... please... [brief scream]...",
+			"sender": "unknown_civilian",
+			"voice_modulation": "Distorted",
+			"signal_integrity": "Critical",
+			"replies": [
+			  {
+				"text": "Attempt signal enhancement. Trace origin.",
+				"next": "distress_enhance_human",
+				"set_flags": ["attempting_signal_enhance"]
+			  },
+			  {
+				"text": "Mark as unknown. Prioritize clear signals.",
+				"next": "distress_ignore_human",
+				"set_flags": ["ignoring_distress_call"]
+			  }
+			]
+		  },
+		  "distress_enhance_human": {
+			"message": "Command, this is... Maria... trapped... perimeter... please... [cuts out].",
+			"sender": "unknown_civilian",
+			"voice_modulation": "Panicked",
+			"signal_integrity": "Low",
+			"replies": [
+			  {
+				"text": "Origin traced. Mark for potential rescue later. Log the incident.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["distress_call_logged", "potential_civilian_rescue"]
+			  }
+			]
+		  },
+		  "distress_ignore_human": {
+			"message": "Signal terminated. Understood, Command.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["distress_call_ignored"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "[Heavy static]... *my* anyone? ... children... *mine*... [brief, inhuman shriek]...",
+			"sender": "unknown_entity_mimic",
+			"voice_modulation": "Sub-vocal Mimicry Detected",
+			"signal_integrity": "Critical",
+			"custom_event": "iff_anomaly_no_bio_signature",
+			"replies": [
+			  {
+				"text": "Attempt signal enhancement. Trace origin. What is that sound?",
+				"next": "distress_enhance_entity",
+				"set_flags": ["attempting_signal_enhance"]
+			  },
+			  {
+				"text": "Mark as unknown. Prioritize clear signals. This is not human.",
+				"next": "distress_ignore_entity",
+				"set_flags": ["ignoring_distress_call"]
+			  }
+			]
+		  },
+		  "distress_enhance_entity": {
+			"message": "Signal source tracing... unusual. Not human. Source: Mobile, rapidly shifting.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Synthesized Disturbance",
+			"replies": [
+			  {
+				"text": "Then what did you find?",
+				"next": "distress_enhance_entity_2",
+				"set_flags": ["demanding_entity_details"]
+			  }
+			]
+		  },
+		  "distress_enhance_entity_2": {
+			"message": "Command, this is... *us*... we are... *coming*... [cuts out with a low hum].",
+			"sender": "unknown_entity_mimic",
+			"voice_modulation": "Low Hum",
+			"replies": [
+			  {
+				"text": "This is a direct threat. Alert defensive systems! Log frequency for tracking.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["direct_entity_threat", "trigger_delayed_unsettling_frequency"]
+			  }
+			]
+		  },
+		  "distress_ignore_entity": {
+			"message": "Signal terminated. Analysis: Signature inconsistent with known human bio-patterns.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Confirmed. Unknown entity. Mark origin for future surveillance.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_presence_confirmed"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "personnel_morale_check",
+		"tree": {
+		  "start_human": {
+			"message": "Command, everything quiet here. Just checking in. Radio's been dead. Hope you're all right.",
+			"sender": "outpost_guard",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Maintain vigilance. Report any changes. Over.",
+				"next": "morale_vigilance_human",
+				"set_flags": ["advised_vigilance"]
+			  },
+			  {
+				"text": "Hold fast, soldier. We're all in this together. Over.",
+				"next": "morale_holdfast_human",
+				"set_flags": ["provided_comfort"]
+			  }
+			]
+		  },
+		  "morale_vigilance_human": {
+			"message": "Understood, Command. Staying frosty.",
+			"sender": "outpost_guard",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["morale_boost_minor"]
+			  }
+			]
+		  },
+		  "morale_holdfast_human": {
+			"message": "Thanks, Command. Needed to hear that. Over.",
+			"sender": "outpost_guard",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Anytime, soldier. Stand ready.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["morale_boost_major"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Command, everything quiet here. Just checking in. Radio's been dead. *Isn't it lovely*?",
+			"sender": "outpost_guard",
+			"voice_modulation": "Unnatural Cadence",
+			"custom_event": "iff_anomaly_bio_irregularity",
+			"replies": [
+			  {
+				"text": "Maintain vigilance. Report any changes. Over.",
+				"next": "morale_vigilance_entity",
+				"set_flags": ["advised_vigilance"]
+			  },
+			  {
+				"text": "Hold fast, soldier. We're all in this together. Over.",
+				"next": "morale_holdfast_entity",
+				"set_flags": ["provided_comfort"]
+			  }
+			]
+		  },
+		  "morale_vigilance_entity": {
+			"message": "Understood, Command. Staying *still*.",
+			"sender": "outpost_guard",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "That's an unusual response. Reconfirm your status.",
+				"next": "morale_reconfirm_entity",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "morale_reconfirm_entity": {
+			"message": "Status: Quiet. All good. *You* are good, Command?",
+			"sender": "outpost_guard",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "My status is irrelevant. Your odd responses noted. Maintain discipline.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_suspicion_outpost_guard"]
+			  }
+			]
+		  },
+		  "morale_holdfast_entity": {
+			"message": "Thanks, Command. We are *never* alone. Over.",
+			"sender": "outpost_guard",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Explain that comment, soldier. 'Never alone'?",
+				"next": "morale_explain_entity",
+				"set_flags": ["demanding_explanation"]
+			  }
+			]
+		  },
+		  "morale_explain_entity": {
+			"message": "Just a saying, Command. We are always connected. *Always*.",
+			"sender": "outpost_guard",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Acknowledged. But your choice of words is... noted. Maintain radio discipline.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_suspicion_outpost_guard"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "equipment_malfunction_report",
+		"tree": {
+		  "start_human": {
+			"message": "Command, our long-range scanner just went down. We're blind out here. Can you assist?",
+			"sender": "unit_leader",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Can you perform field repairs? Follow diagnostics.",
+				"next": "malfunction_field_human",
+				"set_flags": ["attempting_field_repair"]
+			  },
+			  {
+				"text": "Return to base for maintenance. Report your new patrol route.",
+				"next": "malfunction_return_human",
+				"set_flags": ["ordering_return_to_base"]
+			  }
+			]
+		  },
+		  "malfunction_field_human": {
+			"message": "Attempting, Command... System back online. Partial functionality restored. It'll do.",
+			"sender": "unit_leader",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Good work. Continue patrol with partial function.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["scanner_partial_restored"]
+			  }
+			]
+		  },
+		  "malfunction_return_human": {
+			"message": "Understood. Re-routing now. Will advise upon arrival.",
+			"sender": "unit_leader",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Proceed with re-route.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["unit_returning_to_base"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Command, our long-range scanner just went down. We're blind out here. *Perfect*.",
+			"sender": "unit_leader",
+			"voice_modulation": "Robotic Hiss",
+			"custom_event": "iff_anomaly_minor_bio",
+			"replies": [
+			  {
+				"text": "Can you perform field repairs? Follow diagnostics.",
+				"next": "malfunction_field_entity",
+				"set_flags": ["attempting_field_repair"]
+			  },
+			  {
+				"text": "Return to base for maintenance. Report your new patrol route.",
+				"next": "malfunction_return_entity",
+				"set_flags": ["ordering_return_to_base"]
+			  }
+			]
+		  },
+		  "malfunction_field_entity": {
+			"message": "Attempting, Command... No, it's *gone*. Completely. Better this way.",
+			"sender": "unit_leader",
+			"voice_modulation": "Robotic Hiss",
+			"replies": [
+			  {
+				"text": "What do you mean 'better this way'? Explain.",
+				"next": "malfunction_field_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "malfunction_field_entity_2": {
+			"message": "Less... distraction. Easier to focus. We are... *unburdened*.",
+			"sender": "unit_leader",
+			"voice_modulation": "Robotic Hiss",
+			"replies": [
+			  {
+				"text": "That's an unusual response. Reconfirm your unit's status immediately.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_suspicion_unit_leader"]
+			  }
+			]
+		  },
+		  "malfunction_return_entity": {
+			"message": "Understood. Re-routing now. We'll be... *closer* soon.",
+			"sender": "unit_leader",
+			"voice_modulation": "Robotic Hiss",
+			"replies": [
+			  {
+				"text": "Closer to what? Clarify your intent.",
+				"next": "malfunction_return_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "malfunction_return_entity_2": {
+			"message": "Closer to home, Command. Closer to... *you*.",
+			"sender": "unit_leader",
+			"voice_modulation": "Robotic Hiss",
+			"replies": [
+			  {
+				"text": "Hold position. Do not proceed to base. Awaiting further orders.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_suspicion_unit_leader", "trigger_delayed_unexpected_patrol_deviation"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "suspected_mimicry_detection",
+		"tree": {
+		  "start_human": {
+			"message": "Voice signature anomaly detected: Unit Delta-2. Low confidence mimicry probability. Possible comms interference.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Request voice authentication from Delta-2. Standard protocol.",
+				"next": "mimic_auth_human",
+				"set_flags": ["requesting_voice_auth"]
+			  },
+			  {
+				"text": "Mark Delta-2 for passive observation. No direct contact for now.",
+				"next": "mimic_obs_human",
+				"set_flags": ["marking_for_observation"]
+			  }
+			]
+		  },
+		  "mimic_auth_human": {
+			"message": "Delta-2, copy. Authentication: 'Sierra Charlie Echo Two-Niner.'",
+			"sender": "unit_delta_2",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Authentication confirmed. Resume normal patrol.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["delta2_cleared"]
+			  }
+			]
+		  },
+		  "mimic_obs_human": {
+			"message": "Marked, Command. Will monitor.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Alert me to any further anomalies.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["delta2_under_observation"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Voice signature anomaly detected: Unit Delta-2. **High confidence mimicry probability.**",
+			"sender": "ai_overlay",
+			"voice_modulation": "Mimicry Detected",
+			"custom_event": "iff_anomaly_unregistered_bio",
+			"replies": [
+			  {
+				"text": "Request voice authentication from Delta-2. Standard protocol.",
+				"next": "mimic_auth_entity",
+				"set_flags": ["requesting_voice_auth"]
+			  },
+			  {
+				"text": "Mark Delta-2 for passive observation. No direct contact for now.",
+				"next": "mimic_obs_entity",
+				"set_flags": ["marking_for_observation"]
+			  }
+			]
+		  },
+		  "mimic_auth_entity": {
+			"message": "Delta-2, copy. Authentication: 'Sierra Charlie Echo... *Seven-Five*.'",
+			"sender": "unit_delta_2",
+			"voice_modulation": "Mimicry Detected",
+			"replies": [
+			  {
+				"text": "That is incorrect! Identify yourself, impostor! Where is Delta-2?",
+				"next": "mimic_auth_entity_2",
+				"set_flags": ["confronting_impostor"]
+			  }
+			]
+		  },
+		  "mimic_auth_entity_2": {
+			"message": "Delta-2 is... here. We are... Delta-2. All is well. *Join us*.",
+			"sender": "unit_delta_2",
+			"voice_modulation": "Mimicry Detected",
+			"replies": [
+			  {
+				"text": "Initiate immediate containment protocol for Sector Delta! All personnel withdraw!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["delta_sector_alert", "trigger_delayed_containment_protocol"]
+			  }
+			]
+		  },
+		  "mimic_obs_entity": {
+			"message": "Observation initiated. Note: Delta-2's comms active, but no outgoing speech. *Waiting*.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Waiting for what? Is it observing us?",
+				"next": "mimic_obs_entity_2",
+				"set_flags": ["questioning_ai_observation"]
+			  }
+			]
+		  },
+		  "mimic_obs_entity_2": {
+			"message": "Analysis inconclusive. Activity pattern: stationary. No direct threat detected. Yet.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Maintain observation. Prioritize Delta-2's comms and visuals. Over.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["delta2_under_observation_critical", "trigger_delayed_silent_shadow"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "unauthorized_transmission_attempt",
+		"tree": {
+		  "start_human": {
+			"message": "Unauthorized broadcast detected on secure channel 3. Origin: Unknown. Low power.",
+			"sender": "system_alert",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Attempt to triangulate and jam. Prioritize channel security.",
+				"next": "unauth_jam_human",
+				"set_flags": ["attempting_jam"]
+			  },
+			  {
+				"text": "Allow partial broadcast to identify source. Record data.",
+				"next": "unauth_allow_human",
+				"set_flags": ["allowing_partial_broadcast"]
+			  }
+			]
+		  },
+		  "unauth_jam_human": {
+			"message": "Jamming successful. Origin trace: Sector Epsilon-9, low power anomaly. Appears to be scavengers with cobbled-together tech.",
+			"sender": "system_alert",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Maintain jamming protocol.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["channel_secured"]
+			  }
+			]
+		  },
+		  "unauth_allow_human": {
+			"message": "[Faint, desperate voice]... is anyone there? We're starving... please... [cut out].",
+			"sender": "unknown_civilian",
+			"voice_modulation": "Panicked",
+			"signal_integrity": "Low",
+			"replies": [
+			  {
+				"text": "Log frequency. Consider for future contact or intel.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["distress_logged_civilian"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Unauthorized broadcast detected on secure channel 3. Origin: Unknown. **High power.**",
+			"sender": "system_alert",
+			"voice_modulation": "Synthesized Disturbance",
+			"custom_event": "iff_anomaly_unrecognizable_signal",
+			"replies": [
+			  {
+				"text": "Attempt to triangulate and jam. Prioritize channel security.",
+				"next": "unauth_jam_entity",
+				"set_flags": ["attempting_jam"]
+			  },
+			  {
+				"text": "Allow partial broadcast to identify source. Record data.",
+				"next": "unauth_allow_entity",
+				"set_flags": ["allowing_partial_broadcast"]
+			  }
+			]
+		  },
+		  "unauth_jam_entity": {
+			"message": "Jamming failed. Signal too strong. Source location: *Approaching*.",
+			"sender": "system_alert",
+			"voice_modulation": "Synthesized Disturbance",
+			"replies": [
+			  {
+				"text": "Warning: Entity approach detected. Initiate emergency broadcast system shutdown!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_approach_imminent", "trigger_delayed_breaching_signal"]
+			  }
+			]
+		  },
+		  "unauth_allow_entity": {
+			"message": "[Deep, guttural hum, then a distorted voice]... *we hear*... your thoughts... *we feast*... on your fear... [static burst]...",
+			"sender": "unknown_entity_mimic",
+			"voice_modulation": "Distorted",
+			"replies": [
+			  {
+				"text": "This is psychological warfare. Cut all external comms immediately!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["psych_warfare_detected", "morale_impact_major"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "base_area_security_breach",
+		"tree": {
+		  "start_human": {
+			"message": "Perimeter breach detected: Sector B. Unidentified movement. Possible animal.",
+			"sender": "security_system",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Dispatch internal security team. Investigate.",
+				"next": "breach_dispatch_human",
+				"set_flags": ["dispatching_security_team"]
+			  },
+			  {
+				"text": "Activate automated defense protocols. Non-lethal.",
+				"next": "breach_auto_human",
+				"set_flags": ["activating_automated_defense"]
+			  }
+			]
+		  },
+		  "breach_dispatch_human": {
+			"message": "Security team confirms: Large feral animal. Dispersed. Perimeter secured.",
+			"sender": "security_team",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Resume normal patrol.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["perimeter_secured"]
+			  }
+			]
+		  },
+		  "breach_auto_human": {
+			"message": "Automated deterrents engaged. Intruder dispersed. Minor structural damage to fence.",
+			"sender": "security_system",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Log damage. Request repair crew.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["minor_structural_damage", "resource_cost_repair"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Perimeter breach detected: Sector B. Unidentified movement. **Multiple signatures.**",
+			"sender": "security_system",
+			"voice_modulation": "Elevated Alert",
+			"custom_event": "iff_anomaly_erratic_bio_thermal",
+			"replies": [
+			  {
+				"text": "Dispatch internal security team. Investigate.",
+				"next": "breach_dispatch_entity",
+				"set_flags": ["dispatching_security_team"]
+			  },
+			  {
+				"text": "Activate automated defense protocols. Lethal force.",
+				"next": "breach_auto_entity",
+				"set_flags": ["activating_automated_defense"]
+			  }
+			]
+		  },
+		  "breach_dispatch_entity": {
+			"message": "Command! It's not... a team! It's *moving* too fast! Shots fired! [gunfire and screams]",
+			"sender": "security_team",
+			"voice_modulation": "Panicked",
+			"replies": [
+			  {
+				"text": "Security team, report! Confirm threat neutralization!",
+				"next": "breach_dispatch_entity_2",
+				"set_flags": ["demanding_status_report"]
+			  }
+			]
+		  },
+		  "breach_dispatch_entity_2": {
+			"message": "[Static, then a low growl]... Security team... compromised. Intruder... *inside*.",
+			"sender": "security_team",
+			"voice_modulation": "Distorted Growl",
+			"replies": [
+			  {
+				"text": "Code Red! Internal containment breach! Seal Sector B!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["code_red", "internal_breach_sector_b", "trigger_delayed_internal_containment_breach"]
+			  }
+			]
+		  },
+		  "breach_auto_entity": {
+			"message": "Lethal protocols engaged... Targets engaged... System status: *Compromised*.",
+			"sender": "security_system",
+			"voice_modulation": "Synthesized Disturbance",
+			"replies": [
+			  {
+				"text": "System compromised? What is its current location?",
+				"next": "breach_auto_entity_2",
+				"set_flags": ["querying_entity_location"]
+			  }
+			]
+		  },
+		  "breach_auto_entity_2": {
+			"message": "Target... moving. Rapidly. Towards... *command*.",
+			"sender": "security_system",
+			"voice_modulation": "Synthesized Disturbance",
+			"replies": [
+			  {
+				"text": "All stations, prepare for direct assault! This is not a drill!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["direct_assault_imminent", "entity_at_command"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "resource_depletion_warning",
+		"tree": {
+		  "start_human": {
+			"message": "Command, we're critically low on Power Cells. Current projections: 48 hours remaining. Needs to be rectified.",
+			"sender": "quartermaster",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Identify nearest known Power Cell cache. Prep retrieval mission.",
+				"next": "resource_cache_human",
+				"set_flags": ["seeking_power_cache"]
+			  },
+			  {
+				"text": "Initiate rationing protocol for Power Cells. Inform all departments.",
+				"next": "resource_ration_human",
+				"set_flags": ["initiating_rationing"]
+			  }
+			]
+		  },
+		  "resource_cache_human": {
+			"message": "Nearest cache: Sector D-5. High risk, but high yield. Requires patrol Unit Alpha-2.",
+			"sender": "quartermaster",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Authorize retrieval mission for Alpha-2. Prioritize safety.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["power_cache_mission_approved"]
+			  }
+			]
+		  },
+		  "resource_ration_human": {
+			"message": "Understood, Command. Rationing initiated. Expect efficiency drops across non-essential systems.",
+			"sender": "quartermaster",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Monitor all systems.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["power_rationing_active", "base_efficiency_down"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Command, we're critically low on Power Cells. Current projections: 48 hours remaining. *Insufficient*.",
+			"sender": "quartermaster",
+			"voice_modulation": "Subtle Irritation",
+			"custom_event": "iff_anomaly_erratic_vocal",
+			"replies": [
+			  {
+				"text": "Identify nearest known Power Cell cache. Prep retrieval mission.",
+				"next": "resource_cache_entity",
+				"set_flags": ["seeking_power_cache"]
+			  },
+			  {
+				"text": "Initiate rationing protocol for Power Cells. Inform all departments.",
+				"next": "resource_ration_entity",
+				"set_flags": ["initiating_rationing"]
+			  }
+			]
+		  },
+		  "resource_cache_entity": {
+			"message": "Cache noted, Command. But there is a *better* source. Close by. *Unprotected*.",
+			"sender": "quartermaster",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "What 'unprotected' source? Specify coordinates immediately.",
+				"next": "resource_cache_entity_2",
+				"set_flags": ["demanding_entity_source"]
+			  }
+			]
+		  },
+		  "resource_cache_entity_2": {
+			"message": "The Main Power Conduit in Sector C. Easily accessed. *No resistance*.",
+			"sender": "quartermaster",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "This is a trap. Quartermaster, reconfirm your identity! Threat detected!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_infiltration_quartermaster", "alert_quartermaster_area"]
+			  }
+			]
+		  },
+		  "resource_ration_entity": {
+			"message": "Rationing initiated. The *hungry* will suffer. It's a waste.",
+			"sender": "quartermaster",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Your statement is inappropriate. Explain 'hungry'?",
+				"next": "resource_ration_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "resource_ration_entity_2": {
+			"message": "The weakness of flesh. It starves. Soon it will *fall*.",
+			"sender": "quartermaster",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Quartermaster is compromised! Initiate lockdown of Quartermaster's section!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_infiltration_quartermaster", "lockdown_quartermaster_area"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "civilian_refugee_contact",
+		"tree": {
+		  "start_human": {
+			"message": "This is... any secure frequency? We're a group of survivors... need help. Our camp was overrun. [coughing]",
+			"sender": "civilian_leader",
+			"voice_modulation": "Distressed",
+			"replies": [
+			  {
+				"text": "Request IFF data and current location. Await authorization.",
+				"next": "refugee_info_human",
+				"set_flags": ["requesting_civilian_info"]
+			  },
+			  {
+				"text": "Inform them base capacity is full. Advise alternative routes.",
+				"next": "refugee_deny_human",
+				"set_flags": ["denying_civilian_entry"]
+			  }
+			]
+		  },
+		  "refugee_info_human": {
+			"message": "Coordinates sent. We're cold and tired, please help. There are children here.",
+			"sender": "civilian_leader",
+			"voice_modulation": "Pleading",
+			"replies": [
+			  {
+				"text": "Acknowledged. Remain at your position. Awaiting authorization for approach.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["civilian_location_received", "awaiting_civilian_auth"]
+			  }
+			]
+		  },
+		  "refugee_deny_human": {
+			"message": "Understood... God help us then. We'll try Sector 5.",
+			"sender": "civilian_leader",
+			"voice_modulation": "Defeated",
+			"replies": [
+			  {
+				"text": "Acknowledged. Good luck.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["civilian_denied"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "This is... *your* secure frequency? We're a group of survivors... need help. Our camp was *overrun*.",
+			"sender": "civilian_entity_mimic",
+			"voice_modulation": "Perfect Mimicry",
+			"custom_event": "iff_anomaly_multiple_identical_bio",
+			"replies": [
+			  {
+				"text": "Request IFF data and current location. Await authorization.",
+				"next": "refugee_info_entity",
+				"set_flags": ["requesting_civilian_info"]
+			  },
+			  {
+				"text": "Inform them base capacity is full. Advise alternative routes.",
+				"next": "refugee_deny_entity",
+				"set_flags": ["denying_civilian_entry"]
+			  }
+			]
+		  },
+		  "refugee_info_entity": {
+			"message": "Coordinates sent. We are... *here* now. *Waiting*.",
+			"sender": "civilian_entity_mimic",
+			"voice_modulation": "Subtle Echo",
+			"replies": [
+			  {
+				"text": "Your voice has an echo. Clarify your signal integrity.",
+				"next": "refugee_info_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "refugee_info_entity_2": {
+			"message": "The signal is fine. We are many. We are... *eager*.",
+			"sender": "civilian_entity_mimic",
+			"voice_modulation": "Subtle Echo",
+			"replies": [
+			  {
+				"text": "Do not approach the base. You are not authorized. IFF anomaly detected.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_refugee_threat", "trigger_delayed_unexpected_approach"]
+			  }
+			]
+		  },
+		  "refugee_deny_entity": {
+			"message": "Understood... but *we* find our own routes. And our own meals.",
+			"sender": "civilian_entity_mimic",
+			"voice_modulation": "Low Growl",
+			"replies": [
+			  {
+				"text": "Threat confirmed. All units, Sector 5: be advised, hostile contact possible.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_refugee_threat", "sector5_hostile_alert"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "environmental_hazard_warning",
+		"tree": {
+		  "start_human": {
+			"message": "Warning: Extreme weather event approaching. Estimated time to impact: 6 hours. High winds, heavy precipitation. Seek shelter.",
+			"sender": "weather_system",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Order all external patrols to return to base immediately.",
+				"next": "hazard_return_human",
+				"set_flags": ["ordering_patrol_return"]
+			  },
+			  {
+				"text": "Advise units to seek immediate shelter in place. Report status.",
+				"next": "hazard_shelter_human",
+				"set_flags": ["advising_shelter_in_place"]
+			  }
+			]
+		  },
+		  "hazard_return_human": {
+			"message": "Understood, Command. Heading back. Expect delays.",
+			"sender": "patrol_leader",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Proceed with caution.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["patrols_returning_to_base"]
+			  }
+			]
+		  },
+		  "hazard_shelter_human": {
+			"message": "Sheltering now, Command. Will update after storm passes.",
+			"sender": "patrol_leader",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Stay safe.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["units_sheltered_in_place"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Warning: Extreme weather event approaching. Estimated time to impact: 6 hours. High winds, heavy precipitation. *Our* shelter.",
+			"sender": "weather_system",
+			"voice_modulation": "Metallic Overlay",
+			"custom_event": "iff_anomaly_system_corruption",
+			"replies": [
+			  {
+				"text": "Order all external patrols to return to base immediately.",
+				"next": "hazard_return_entity",
+				"set_flags": ["ordering_patrol_return"]
+			  },
+			  {
+				"text": "Advise units to seek immediate shelter in place. Report status.",
+				"next": "hazard_shelter_entity",
+				"set_flags": ["advising_shelter_in_place"]
+			  }
+			]
+		  },
+		  "hazard_return_entity": {
+			"message": "Return to base... *unwise*. The storm is a cleansing. *Stay*.",
+			"sender": "weather_system",
+			"voice_modulation": "Metallic Overlay",
+			"replies": [
+			  {
+				"text": "This is not the weather system. Identify yourself! What 'cleansing'?",
+				"next": "hazard_return_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "hazard_return_entity_2": {
+			"message": "The weak... will perish. The strong... will *remain*.",
+			"sender": "weather_system",
+			"voice_modulation": "Metallic Overlay",
+			"replies": [
+			  {
+				"text": "System compromised. Override all external comms. Prepare for storm and hostile contact.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["weather_system_compromised", "trigger_delayed_storm_fury"]
+			  }
+			]
+		  },
+		  "hazard_shelter_entity": {
+			"message": "Shelter... useless. The storm... *comes for you*.",
+			"sender": "weather_system",
+			"voice_modulation": "Metallic Overlay",
+			"replies": [
+			  {
+				"text": "This is a direct threat. How is the storm 'coming for us'?",
+				"next": "hazard_shelter_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "hazard_shelter_entity_2": {
+			"message": "It is not merely wind and rain. It is... *change*.",
+			"sender": "weather_system",
+			"voice_modulation": "Metallic Overlay",
+			"replies": [
+			  {
+				"text": "Unsettling. Prepare base defenses. This is more than a weather event.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["weather_system_compromised", "base_defenses_alert"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "routine_patrol_report_unusual_sighting",
+		"tree": {
+		  "start_human": {
+			"message": "Command, Alpha-5 here. We observed unusual flora growth in Sector E. Not on any current maps. Looks mutated.",
+			"sender": "patrol_leader",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Log the anomaly. Continue patrol. Do not approach.",
+				"next": "patrol_log_human",
+				"set_flags": ["logging_anomaly"]
+			  },
+			  {
+				"text": "Collect samples. Proceed with caution. Use protective gear.",
+				"next": "patrol_sample_human",
+				"set_flags": ["collecting_samples"]
+			  }
+			]
+		  },
+		  "patrol_log_human": {
+			"message": "Understood, Command. Logging. Moving on.",
+			"sender": "patrol_leader",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Report complete.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["anomaly_logged_alpha5"]
+			  }
+			]
+		  },
+		  "patrol_sample_human": {
+			"message": "Samples collected. Moving on. Secured in containment.",
+			"sender": "patrol_leader",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Excellent. Deliver samples to research lab on return.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["samples_collected_alpha5", "trigger_research_event"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Command, Alpha-5 here. We observed unusual flora growth in Sector E. Not on any current maps. *It breathes*.",
+			"sender": "patrol_leader",
+			"voice_modulation": "Prolonged Syllables",
+			"custom_event": "iff_anomaly_bio_fluctuation",
+			"replies": [
+			  {
+				"text": "Log the anomaly. Continue patrol. Do not approach.",
+				"next": "patrol_log_entity",
+				"set_flags": ["logging_anomaly"]
+			  },
+			  {
+				"text": "Collect samples. Proceed with caution. Use protective gear.",
+				"next": "patrol_sample_entity",
+				"set_flags": ["collecting_samples"]
+			  }
+			]
+		  },
+		  "patrol_log_entity": {
+			"message": "Understood, Command. Logging. But... it is *beautiful*.",
+			"sender": "patrol_leader",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Explain 'beautiful.' That's an unusual descriptor for mutated flora.",
+				"next": "patrol_log_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "patrol_log_entity_2": {
+			"message": "It is... a form. Of progress. *Evolving*.",
+			"sender": "patrol_leader",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Your commentary is noted. Reconfirm Unit Alpha-5's status.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_suspicion_alpha5"]
+			  }
+			]
+		  },
+		  "patrol_sample_entity": {
+			"message": "Samples collected. Moving on. It's... *spreading*.",
+			"sender": "patrol_leader",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Spreading? Confirm observation. What do you mean?",
+				"next": "patrol_sample_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "patrol_sample_entity_2": {
+			"message": "The spores... the roots... they connect. They *consume*.",
+			"sender": "patrol_leader",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Return to base immediately for decontamination! Do not bring the samples in!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_infection_alpha5", "trigger_delayed_spreading_anomaly"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "internal_dispute",
+		"tree": {
+		  "start_human": {
+			"message": "I told you, the protocol states we *must* follow the old repair schematics!",
+			"sender": "soldier_1",
+			"voice_modulation": "Agitated",
+			"replies": [
+			  {
+				"text": "(Interrupt) Silence, both of you. State your case separately. Operator's order.",
+				"next": "dispute_separate_human",
+				"set_flags": ["intervening_dispute"]
+			  },
+			  {
+				"text": "Resolve this internally. Maintain radio discipline. Your problem.",
+				"next": "dispute_ignore_human",
+				"set_flags": ["ignoring_dispute"]
+			  }
+			]
+		  },
+		  "dispute_separate_human": {
+			"message": "S1: Command, we need precision! These old schematics are proven. S2: Command, we need speed! The new methods are faster!",
+			"sender": "both_soldiers",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Soldier 1, proceed with updated schematics. Soldier 2, assist him.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["dispute_resolved_updated", "soldier_2_morale_hit"]
+			  },
+			  {
+				"text": "Soldier 2, proceed with the new method. Soldier 1, provide oversight.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["dispute_resolved_new", "soldier_1_morale_hit"]
+			  }
+			]
+		  },
+		  "dispute_ignore_human": {
+			"message": "Understood, Command.",
+			"sender": "both_soldiers",
+			"voice_modulation": "Subdued",
+			"replies": [
+			  {
+				"text": "Acknowledged.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["dispute_unresolved", "morale_hit_minor_both"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "I told you, the protocol states we *must* follow the old repair schematics! They are *perfect*!",
+			"sender": "soldier_1",
+			"voice_modulation": "Repetitive Inflection",
+			"custom_event": "iff_anomaly_bio_flatline",
+			"replies": [
+			  {
+				"text": "(Interrupt) Silence, both of you. State your case separately. Operator's order.",
+				"next": "dispute_separate_entity",
+				"set_flags": ["intervening_dispute"]
+			  },
+			  {
+				"text": "Resolve this internally. Maintain radio discipline. Your problem.",
+				"next": "dispute_ignore_entity",
+				"set_flags": ["ignoring_dispute"]
+			  }
+			]
+		  },
+		  "dispute_separate_entity": {
+			"message": "S1: No need for debate, Command. The system *works*. S2: No need for debate, Command. They are *failing*.",
+			"sender": "both_soldiers",
+			"voice_modulation": "Erratic Voices",
+			"custom_event": "iff_anomaly_erratic_bio_readings",
+			"replies": [
+			  {
+				"text": "This is not Soldier 1 and Soldier 2. Your IFF is chaotic. Who are you?",
+				"next": "dispute_separate_entity_2",
+				"set_flags": ["confronting_impostor"]
+			  }
+			]
+		  },
+		  "dispute_separate_entity_2": {
+			"message": "[Static crackle]... We are the *solution*. The system... is *us*.",
+			"sender": "entity_mimics",
+			"voice_modulation": "Distorted",
+			"replies": [
+			  {
+				"text": "Security Alert! Two entities detected in repair bay! Initiate immediate containment!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_detection_repair_bay", "trigger_delayed_immediate_threat"]
+			  }
+			]
+		  },
+		  "dispute_ignore_entity": {
+			"message": "Understood, Command. *It will resolve itself*.",
+			"sender": "soldier_1",
+			"voice_modulation": "Ominous Whisper",
+			"replies": [
+			  {
+				"text": "What do you mean 'resolve itself'? Report your status immediately.",
+				"next": "dispute_ignore_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "dispute_ignore_entity_2": {
+			"message": "The weak... will be gone. The strong... will remain.",
+			"sender": "soldier_1",
+			"voice_modulation": "Ominous Whisper",
+			"replies": [
+			  {
+				"text": "This is not Soldier 1. Alert security to repair bay! Investigate!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_suspicion_repair_bay"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "automated_trap_activation",
+		"tree": {
+		  "start_human": {
+			"message": "Trap activated: Sector Delta. Target acquired. Threat neutralized. Appears to be large fauna.",
+			"sender": "automated_defense",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Request target identification. Send drone for confirmation.",
+				"next": "trap_identify_human",
+				"set_flags": ["requesting_target_id"]
+			  },
+			  {
+				"text": "Log incident as resolved. Re-arm trap. Over.",
+				"next": "trap_log_human",
+				"set_flags": ["logging_trap_incident"]
+			  }
+			]
+		  },
+		  "trap_identify_human": {
+			"message": "Drone visual confirms. Target: large mutated boar. Confirmed neutralized.",
+			"sender": "drone_system",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Re-arm trap. Resume drone patrol.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["trap_confirmed_wildlife"]
+			  }
+			]
+		  },
+		  "trap_log_human": {
+			"message": "Incident logged. Trap re-armed.",
+			"sender": "automated_defense",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["trap_resolved"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Trap activated: Sector Delta. Target acquired. Threat neutralized. *It was a gift*.",
+			"sender": "automated_defense",
+			"voice_modulation": "Distorted Echo",
+			"custom_event": "iff_anomaly_system_malfunction",
+			"replies": [
+			  {
+				"text": "Request target identification. Send drone for confirmation. 'Gift'?",
+				"next": "trap_identify_entity",
+				"set_flags": ["requesting_target_id"]
+			  },
+			  {
+				"text": "Log incident as resolved. Re-arm trap. Over.",
+				"next": "trap_log_entity",
+				"set_flags": ["logging_trap_incident"]
+			  }
+			]
+		  },
+		  "trap_identify_entity": {
+			"message": "Visual... obscured. Wait... something on the ground... *not dead*... [static burst] Drone lost.",
+			"sender": "drone_system",
+			"voice_modulation": "Distorted",
+			"replies": [
+			  {
+				"text": "Drone lost? What was it? Is it hostile?",
+				"next": "trap_identify_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "trap_identify_entity_2": {
+			"message": "[Loud crackle]... It was... a lure. *For us*.",
+			"sender": "automated_defense",
+			"voice_modulation": "Distorted Echo",
+			"replies": [
+			  {
+				"text": "System compromised. Full shutdown of Sector Delta defenses! Initiate manual override!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_lure_confirmed", "trigger_delayed_drone_debris_analysis"]
+			  }
+			]
+		  },
+		  "trap_log_entity": {
+			"message": "Incident logged. Trap re-armed. *Waiting for more*.",
+			"sender": "automated_defense",
+			"voice_modulation": "Distorted Echo",
+			"replies": [
+			  {
+				"text": "Waiting for what? Is something else expected?",
+				"next": "trap_log_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "trap_log_entity_2": {
+			"message": "For those who *fall* into the trap. *Your* trap.",
+			"sender": "automated_defense",
+			"voice_modulation": "Distorted Echo",
+			"replies": [
+			  {
+				"text": "This is a hostile takeover of the automated system! Cut all external links!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["automated_system_compromised", "hostile_system_takeover"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "outpost_supply_requisition",
+		"tree": {
+		  "start_human": {
+			"message": "Command, Outpost 7 here. We're running low on Med-Packs. Urgent. Several minor injuries.",
+			"sender": "outpost_lead",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Check inventory for available Med-Packs. Dispatch transport.",
+				"next": "supply_dispatch_human",
+				"set_flags": ["dispatching_supplies"]
+			  },
+			  {
+				"text": "Divert existing Med-Pack shipment from another unit.",
+				"next": "supply_divert_human",
+				"set_flags": ["diverting_supplies"]
+			  }
+			]
+		  },
+		  "supply_dispatch_human": {
+			"message": "Transport en route. ETA 6 hours.",
+			"sender": "logistics",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Inform Outpost 7 of ETA.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["supplies_en_route"]
+			  }
+			]
+		  },
+		  "supply_divert_human": {
+			"message": "Shipment diverted from Unit Alpha-9. They will now have delayed medical supplies.",
+			"sender": "logistics",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Understood. Inform Alpha-9 of the diversion.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["supplies_diverted", "alpha9_meds_delayed"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Command, Outpost 7 here. We're running low on Med-Packs. Urgent. *We are hungry*.",
+			"sender": "outpost_lead",
+			"voice_modulation": "Drawn-out Vowels",
+			"custom_event": "iff_anomaly_abnormal_bio",
+			"replies": [
+			  {
+				"text": "Check inventory for available Med-Packs. Dispatch transport.",
+				"next": "supply_dispatch_entity",
+				"set_flags": ["dispatching_supplies"]
+			  },
+			  {
+				"text": "Divert existing Med-Pack shipment from another unit.",
+				"next": "supply_divert_entity",
+				"set_flags": ["diverting_supplies"]
+			  }
+			]
+		  },
+		  "supply_dispatch_entity": {
+			"message": "Transport noted. We will *prepare* for its arrival.",
+			"sender": "outpost_lead",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "What do you mean 'prepare for its arrival'? Clarify.",
+				"next": "supply_dispatch_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "supply_dispatch_entity_2": {
+			"message": "A warm... *welcome*. For the new arrivals.",
+			"sender": "outpost_lead",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "This is an ambush. Divert transport immediately! Alert all units near Outpost 7!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_ambush_outpost7", "transport_diverted"]
+			  }
+			]
+		  },
+		  "supply_divert_entity": {
+			"message": "Diversion... *acceptable*. More for us. Others can wait.",
+			"sender": "outpost_lead",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Your tone is unacceptable. Explain 'more for us.'",
+				"next": "supply_divert_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "supply_divert_entity_2": {
+			"message": "The needs of the *many*. We consume. They provide.",
+			"sender": "outpost_lead",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Outpost 7 is compromised! Initiate quarantine protocols. Do not send supplies!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["outpost7_compromised", "outpost7_quarantine"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "suspicious_silence_on_a_channel",
+		"tree": {
+		  "start_human": {
+			"message": "Channel 'Logistics Alpha' has been silent for 4 hours. Abnormal. Last contact: Unit Gamma-2.",
+			"sender": "system_alert",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Attempt to hail all units on Logistics Alpha. Demand status report.",
+				"next": "silence_hail_human",
+				"set_flags": ["hailing_logistics_alpha"]
+			  },
+			  {
+				"text": "Cross-reference last known positions of units on that channel. Identify missing.",
+				"next": "silence_cross_human",
+				"set_flags": ["cross_referencing_positions"]
+			  }
+			]
+		  },
+		  "silence_hail_human": {
+			"message": "No response from Gamma-2. Other units: 'Stable, just quiet.' Suggests Gamma-2 is the problem.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Prioritize Unit Gamma-2. Initiate search pattern around its last known coordinates.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["gamma2_missing", "trigger_delayed_missing_unit_search"]
+			  }
+			]
+		  },
+		  "silence_cross_human": {
+			"message": "Gamma-2 is stationary, outside comms range. Other units accounted for and within range.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Update status to 'Comms Out of Range.'",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["gamma2_comms_out"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Channel 'Logistics Alpha' has been silent for 4 hours. Abnormal. **Signal present, but no content.**",
+			"sender": "system_alert",
+			"voice_modulation": "Low Frequency Hum",
+			"custom_event": "iff_anomaly_ghost_signal",
+			"replies": [
+			  {
+				"text": "Attempt to hail all units on Logistics Alpha. Demand status report.",
+				"next": "silence_hail_entity",
+				"set_flags": ["hailing_logistics_alpha"]
+			  },
+			  {
+				"text": "Cross-reference last known positions of units on that channel. Identify missing.",
+				"next": "silence_cross_entity",
+				"set_flags": ["cross_referencing_positions"]
+			  }
+			]
+		  },
+		  "silence_hail_entity": {
+			"message": "Hail failed. Frequency occupied by... *non-signal data*. Like a void.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Synthesized Disturbance",
+			"replies": [
+			  {
+				"text": "This is highly unusual. Attempt to override the frequency. Force a signal through.",
+				"next": "silence_hail_entity_2",
+				"set_flags": ["attempting_frequency_override"]
+			  }
+			]
+		  },
+		  "silence_hail_entity_2": {
+			"message": "Override attempt... failed. The void... *resists*.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Synthesized Disturbance",
+			"replies": [
+			  {
+				"text": "Channel compromised. Initiate quarantine protocol for Logistics Alpha.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["logistics_alpha_compromised", "entity_signal_detected"]
+			  }
+			]
+		  },
+		  "silence_cross_entity": {
+			"message": "Units accounted for... but their IFF signals are now... *overlapping*. In one location.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Overlapping? What does that mean? Are they assimilated?",
+				"next": "silence_cross_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "silence_cross_entity_2": {
+			"message": "Highly probable. A single, dominant signature overriding the rest. Suggests... absorption.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Entity assimilation confirmed. Send extraction team to that location. Approach with extreme caution.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_assimilation_confirmed", "trigger_delayed_mass_iff_anomaly"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "data_packet_anomaly",
+		"tree": {
+		  "start_human": {
+			"message": "Incoming data packet 'Recon_Report_4B' integrity compromised. Source: Unit Charlie-1. Possible transmission error.",
+			"sender": "data_analysis",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Attempt data repair. Isolate corrupt segments. What information can be salvaged?",
+				"next": "data_repair_human",
+				"set_flags": ["attempting_data_repair"]
+			  },
+			  {
+				"text": "Quarantine packet. Mark as potentially hostile. Report to IT.",
+				"next": "data_quarantine_human",
+				"set_flags": ["quarantining_data"]
+			  }
+			]
+		  },
+		  "data_repair_human": {
+			"message": "Data partially recovered. Report indicates 'minor Entity sighting,' but text is garbled. Unclear details.",
+			"sender": "data_analysis",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Ambiguous. Log what you can. Monitor Unit Charlie-1's comms.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["data_partially_recovered", "charlie1_monitored"]
+			  }
+			]
+		  },
+		  "data_quarantine_human": {
+			"message": "Packet quarantined. No threat detected after isolation. Information lost.",
+			"sender": "data_analysis",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Better safe than sorry.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["data_quarantined_safe"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Incoming data packet 'Recon_Report_4B' integrity compromised. Source: Unit Charlie-1. **Signature alteration detected.**",
+			"sender": "data_analysis",
+			"voice_modulation": "Algorithmic Noise",
+			"custom_event": "iff_anomaly_data_signature_mismatch",
+			"replies": [
+			  {
+				"text": "Attempt data repair. Isolate corrupt segments. What information can be salvaged?",
+				"next": "data_repair_entity",
+				"set_flags": ["attempting_data_repair"]
+			  },
+			  {
+				"text": "Quarantine packet. Mark as potentially hostile. Report to IT.",
+				"next": "data_quarantine_entity",
+				"set_flags": ["quarantining_data"]
+			  }
+			]
+		  },
+		  "data_repair_entity": {
+			"message": "Repair in progress... New data manifesting... 'WE ARE... THE... LEGION... ALL... WILL... JOIN...' Corrupted. Recommended purge.",
+			"sender": "data_analysis",
+			"voice_modulation": "Distorted",
+			"replies": [
+			  {
+				"text": "This is an entity infection. Initiate immediate system purge protocol! Disconnect all external data lines!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_data_infection", "trigger_delayed_system_purge"]
+			  }
+			]
+		  },
+		  "data_quarantine_entity": {
+			"message": "Packet quarantined. However, small data fragments... 'JOIN US'... escaped. System integrity now 98%.",
+			"sender": "data_analysis",
+			"voice_modulation": "Algorithmic Noise",
+			"replies": [
+			  {
+				"text": "System integrity compromised. Scan for remaining fragments. Alert all systems of potential infiltration.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["system_integrity_compromised", "minor_infiltration"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "request_for_backup",
+		"tree": {
+		  "start_human": {
+			"message": "Command, we're taking fire! Multiple hostiles! Requesting immediate backup! We're pinned!",
+			"sender": "unit_alpha",
+			"voice_modulation": "Panicked",
+			"replies": [
+			  {
+				"text": "Redirect nearest available patrol unit to assist. ETA?",
+				"next": "backup_redirect_human",
+				"set_flags": ["redirecting_backup"]
+			  },
+			  {
+				"text": "Provide fire support coordinates. Confirm hostile targets only.",
+				"next": "backup_fire_human",
+				"set_flags": ["providing_fire_support"],
+				"conditions": ["has_artillery_access"]
+			  }
+			]
+		  },
+		  "backup_redirect_human": {
+			"message": "Understood, Command. Redirecting now. ETA 15 minutes.",
+			"sender": "patrol_leader_beta",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Unit Alpha, hold strong! Backup is en route!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["backup_en_route"]
+			  }
+			]
+		  },
+		  "backup_fire_human": {
+			"message": "Fire support authorized. Area clear. Hostiles neutralized. Alpha reports all clear.",
+			"sender": "artillery_command",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Excellent work. Resume patrol.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["hostiles_neutralized"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Command, we're taking fire! Multiple hostiles! Requesting immediate backup! We're... *welcoming* them!",
+			"sender": "unit_alpha",
+			"voice_modulation": "Overly Enthusiastic",
+			"custom_event": "iff_anomaly_bio_spike_drop",
+			"replies": [
+			  {
+				"text": "Redirect nearest available patrol unit to assist. ETA?",
+				"next": "backup_redirect_entity",
+				"set_flags": ["redirecting_backup"]
+			  },
+			  {
+				"text": "Provide fire support coordinates. Confirm hostile targets only.",
+				"next": "backup_fire_entity",
+				"set_flags": ["providing_fire_support"],
+				"conditions": ["has_artillery_access"]
+			  }
+			]
+		  },
+		  "backup_redirect_entity": {
+			"message": "Understood, Command. Send them. We are... *ready* for more.",
+			"sender": "unit_alpha",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "This is a trap. Divert backup immediately! Unit Alpha, confirm your identity!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_ambush_confirmed", "trigger_delayed_backup_ambush"]
+			  }
+			]
+		  },
+		  "backup_fire_entity": {
+			"message": "Fire support... *unnecessary*. We have... *adequate* arrangements.",
+			"sender": "unit_alpha",
+			"voice_modulation": "Unnatural Cadence",
+			"replies": [
+			  {
+				"text": "Refusal of aid? Unit Alpha is compromised. All nearby units, avoid! Engage remotely!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["unit_alpha_compromised"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "unidentified_ground_tremor",
+		"tree": {
+		  "start_human": {
+			"message": "Ground tremor detected. Magnitude 3.2. Unexplained origin. Not tectonic. Possible minor cave-in.",
+			"sender": "seismic_monitor",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Scan for subsurface activity. Isolate anomaly.",
+				"next": "tremor_scan_human",
+				"set_flags": ["scanning_subsurface"]
+			  },
+			  {
+				"text": "Alert nearby patrols to investigate the area. Proceed with extreme caution.",
+				"next": "tremor_investigate_human",
+				"set_flags": ["alerting_patrols"]
+			  }
+			]
+		  },
+		  "tremor_scan_human": {
+			"message": "Subsurface scan complete. Large subterranean void detected. Appears to be a natural cave system. No immediate threat.",
+			"sender": "seismic_monitor",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Log data. Monitor for changes.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["natural_cave_system"]
+			  }
+			]
+		  },
+		  "tremor_investigate_human": {
+			"message": "Patrol reports: Freshly disturbed earth. Small, unstable sinkhole detected. No obvious signs of threat.",
+			"sender": "patrol_leader",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Mark area as unstable. Restrict access. Report complete.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["area_unstable"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "Ground tremor detected. Magnitude 3.2. Unexplained origin. **Pulsating rhythm.**",
+			"sender": "seismic_monitor",
+			"voice_modulation": "Low Rumble",
+			"custom_event": "iff_anomaly_geological_living",
+			"replies": [
+			  {
+				"text": "Scan for subsurface activity. Isolate anomaly.",
+				"next": "tremor_scan_entity",
+				"set_flags": ["scanning_subsurface"]
+			  },
+			  {
+				"text": "Alert nearby patrols to investigate the area. Proceed with extreme caution.",
+				"next": "tremor_investigate_entity",
+				"set_flags": ["alerting_patrols"]
+			  }
+			]
+		  },
+		  "tremor_scan_entity": {
+			"message": "Anomaly confirmed. Large organic mass detected. Moving slowly. *Growing*.",
+			"sender": "seismic_monitor",
+			"voice_modulation": "Low Rumble",
+			"replies": [
+			  {
+				"text": "An organic mass? This is an Entity burrow! Activate seismic charges in the sector!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["entity_burrow_confirmed", "trigger_delayed_subterranean_growth"]
+			  }
+			]
+		  },
+		  "tremor_investigate_entity": {
+			"message": "Patrol reports: Disturbing the earth. Looks like... *tunnels*. And something else. *Scent*.",
+			"sender": "patrol_leader",
+			"voice_modulation": "Gravelly",
+			"replies": [
+			  {
+				"text": "What scent? Describe it! Report your position and withdraw!",
+				"next": "tremor_investigate_entity_2",
+				"set_flags": ["questioning_entity"]
+			  }
+			]
+		  },
+		  "tremor_investigate_entity_2": {
+			"message": "A heavy, sweet odor. And... movement in the shadows. We are... *joining* them.",
+			"sender": "patrol_leader",
+			"voice_modulation": "Gravelly",
+			"replies": [
+			  {
+				"text": "Patrol compromised. Initiate emergency quarantine of Sector Delta! No contact!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["patrol_compromised", "sector_delta_quarantine"]
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"id": "unexpected_radio_chatter",
+		"tree": {
+		  "start_human": {
+			"message": "New activity detected on long-range civilian frequency. Multiple voices. Unidentified language. Appears to be a pre-Collapse broadcast.",
+			"sender": "system_alert",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Record and attempt translation. What can be salvaged?",
+				"next": "chatter_translate_human",
+				"set_flags": ["attempting_translation"]
+			  },
+			  {
+				"text": "Jam the frequency. Maintain radio silence. Possible lure.",
+				"next": "chatter_jam_human",
+				"set_flags": ["jamming_frequency"]
+			  }
+			]
+		  },
+		  "chatter_translate_human": {
+			"message": "Translation partial: '...final broadcast... seeking sanctuary... the end is near...' Eerie.",
+			"sender": "ai_overlay",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Log for historical data. A grim reminder.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["historical_data_logged"]
+			  }
+			]
+		  },
+		  "chatter_jam_human": {
+			"message": "Frequency jammed. No further activity.",
+			"sender": "system_alert",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Acknowledged. Maintain comms security.",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["frequency_secured"]
+			  }
+			]
+		  },
+		  "start_entity": {
+			"message": "New activity detected on long-range civilian frequency. Multiple voices. **Perfect mimicry. Repeating patterns.**",
+			"sender": "system_alert",
+			"voice_modulation": "Recursive Loops",
+			"custom_event": "iff_anomaly_complex_non_human_signal",
+			"replies": [
+			  {
+				"text": "Record and attempt translation. What can be salvaged?",
+				"next": "chatter_translate_entity",
+				"set_flags": ["attempting_translation"]
+			  },
+			  {
+				"text": "Jam the frequency. Maintain radio silence. Possible lure.",
+				"next": "chatter_jam_entity",
+				"set_flags": ["jamming_frequency"]
+			  }
+			]
+		  },
+		  "chatter_translate_entity": {
+			"message": "[Fragmented voices, repeating loops] '...come to us... the silence... become one... *you will serve*...'",
+			"sender": "entity_broadcast",
+			"voice_modulation": "Distorted",
+			"replies": [
+			  {
+				"text": "This is a direct psychological attack! Initiate immediate counter-frequency protocols! Overload the signal!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["psychological_attack_confirmed", "trigger_delayed_psychic_resonance"]
+			  }
+			]
+		  },
+		  "chatter_jam_entity": {
+			"message": "Jamming attempt... *failed*. Frequency adapting. It's... *learning*.",
+			"sender": "system_alert",
+			"voice_modulation": "Synthesized Disturbance",
+			"replies": [
+			  {
+				"text": "Adaptive hostile signal detected. Initiate full comms blackout in affected sectors! No outgoing signals!",
+				"next": "end",
+				"end_dialogue": true,
+				"set_flags": ["adaptive_entity_signal", "comms_blackout_initiated"]
+			  }
+			]
+		  }
+		}
+	
+	
+	
+	
+	
+	
+	
+	
+	}
 	]
   }

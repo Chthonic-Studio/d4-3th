@@ -83,13 +83,8 @@ func initialize_run():
 	current_frequency = 1001
 
 func spawn_npcs():
-	NPCManager.spawn_all_npcs_at_game_start()
-
-	# TESTING: Add 3 random found frequencies at game start
-	for i in range(3):
-		add_found_frequency()
-	await get_tree().process_frame
-	DialogueManager.start_dialogue(1001, "intro_commander")
+	# Wait until all feeds/rooms and thus all NPCs are loaded
+	await get_tree().process_frame # Ensure all _ready() have run
 
 func generate_threat_traits():
 	print("Generating threat traits")

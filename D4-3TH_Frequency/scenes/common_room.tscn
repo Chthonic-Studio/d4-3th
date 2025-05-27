@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=4 uid="uid://66dmulwa8dvg"]
+[gd_scene load_steps=7 format=4 uid="uid://66dmulwa8dvg"]
 
 [ext_resource type="TileSet" uid="uid://bidtnsah5g5wl" path="res://assets/tilesets/Camp_Tileset.tres" id="1_raxyv"]
 
@@ -16,6 +16,9 @@ colors = PackedColorArray(0, 0, 0, 1, 0.466238, 0.466238, 0.466238, 1, 1, 1, 1, 
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_lybfh"]
 gradient = SubResource("Gradient_raxyv")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lybfh"]
+size = Vector2(570, 20)
 
 [node name="Common_Room" type="Node2D"]
 
@@ -80,8 +83,21 @@ texture = SubResource("GradientTexture1D_lybfh")
 texture_scale = 2.09
 height = 45.0
 
-[node name="spawn_common" type="Node2D" parent="."]
-position = Vector2(-33, 214)
+[node name="EntryVisibleWaypoint" type="Node2D" parent="."]
+position = Vector2(78, 221)
 
-[node name="spawn_common1" type="Node2D" parent="."]
-position = Vector2(433, 200)
+[node name="EntryWaypoint" type="Node2D" parent="."]
+position = Vector2(-22, 221)
+
+[node name="ExitWaypoint" type="Node2D" parent="."]
+position = Vector2(409, 222)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(185, 253)
+shape = SubResource("RectangleShape2D_lybfh")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2(-89, 243)
+target_position = Vector2(553, -2)

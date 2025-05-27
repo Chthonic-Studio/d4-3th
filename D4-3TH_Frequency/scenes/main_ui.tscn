@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=4 uid="uid://bx78ucsp7du5h"]
+[gd_scene load_steps=59 format=4 uid="uid://bx78ucsp7du5h"]
 
 [ext_resource type="Material" uid="uid://wwpwikc46ifu" path="res://assets/resources/swaying_trees.tres" id="1_4yyl0"]
 [ext_resource type="TileSet" uid="uid://bidtnsah5g5wl" path="res://assets/tilesets/Camp_Tileset.tres" id="1_jnl7h"]
@@ -19,16 +19,14 @@
 [ext_resource type="Script" uid="uid://ccouyexb0bnpi" path="res://scripts/UI/camera_feed.gd" id="8_r8eje"]
 [ext_resource type="Texture2D" uid="uid://jblaoishjo6k" path="res://assets/images/Tree1.png" id="8_rrr7h"]
 [ext_resource type="Script" uid="uid://bvslha3h6dhhk" path="res://scripts/UI/frequencyListVbox.gd" id="9_82kx8"]
+[ext_resource type="PackedScene" uid="uid://lhyowrfq5o1v" path="res://scenes/npc.tscn" id="9_kvlnv"]
 [ext_resource type="Texture2D" uid="uid://vhmls5rm2hsn" path="res://assets/images/ProgressBar.png" id="10_hst8y"]
 [ext_resource type="Texture2D" uid="uid://eburt2og5jf" path="res://assets/images/DialogueScreen.png" id="11_r0apq"]
 [ext_resource type="Texture2D" uid="uid://bdpskik4672qq" path="res://assets/images/ProgressBarInverse.png" id="11_u04fh"]
 [ext_resource type="Script" uid="uid://cwk4h3yectg48" path="res://scripts/UI/foundFrequencyVbox.gd" id="13_rx44x"]
-[ext_resource type="PackedScene" uid="uid://66dmulwa8dvg" path="res://scenes/common_room.tscn" id="21_wn4yt"]
-[ext_resource type="PackedScene" uid="uid://8f11j77nx4hv" path="res://scenes/barracks.tscn" id="24_o81xr"]
-[ext_resource type="PackedScene" uid="uid://bqjv402gnqdmu" path="res://scenes/storage.tscn" id="25_kvlnv"]
+[ext_resource type="Script" uid="uid://c4xbxw11r7fj" path="res://scenes/entity_menu_panel.gd" id="16_058p6"]
 [ext_resource type="Script" uid="uid://bm51jm5hyci0d" path="res://scripts/UI/dialogue_ui.gd" id="25_rrr7h"]
 [ext_resource type="Texture2D" uid="uid://cqv1vru1c1amd" path="res://assets/images/dialogue.png" id="26_26nsp"]
-[ext_resource type="PackedScene" uid="uid://cingq33dkeyhi" path="res://scenes/entrance.tscn" id="26_o3ev5"]
 [ext_resource type="PackedScene" uid="uid://cgfn0qhb2jc6b" path="res://scenes/creature.tscn" id="27_whs7n"]
 
 [sub_resource type="Gradient" id="Gradient_rbpqj"]
@@ -171,6 +169,9 @@ scale_min = 0.1
 scale_max = 0.8
 alpha_curve = SubResource("CurveTexture_26nsp")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kvlnv"]
+size = Vector2(1797, 30)
+
 [sub_resource type="CanvasTexture" id="CanvasTexture_ulqfl"]
 diffuse_texture = ExtResource("11_u04fh")
 normal_texture = ExtResource("11_u04fh")
@@ -297,6 +298,27 @@ lifetime = 0.2
 visibility_rect = Rect2(-300, -300, 900, 200)
 process_material = SubResource("ParticleProcessMaterial_rrr7h")
 
+[node name="Waypoints" type="Node2D" parent="."]
+position = Vector2(909, 492)
+
+[node name="BaseWaypoint" type="Marker2D" parent="Waypoints"]
+position = Vector2(461, 0)
+
+[node name="CommsWaypoint" type="Marker2D" parent="Waypoints"]
+position = Vector2(349, 0)
+
+[node name="FarEastWaypoint" type="Marker2D" parent="Waypoints"]
+position = Vector2(674, 0)
+
+[node name="EntranceWaypoint" type="Marker2D" parent="Waypoints"]
+position = Vector2(199, 0)
+
+[node name="LookoutWaypoint" type="Marker2D" parent="Waypoints"]
+position = Vector2(-23, 0)
+
+[node name="ExitWaypoint" type="Marker2D" parent="Waypoints"]
+position = Vector2(-419, 0)
+
 [node name="Tilemap" type="Node2D" parent="."]
 position = Vector2(780, 348)
 
@@ -317,14 +339,16 @@ material = ExtResource("1_4yyl0")
 position = Vector2(661, 90)
 texture = ExtResource("8_rrr7h")
 
-[node name="spawn_background" type="Node2D" parent="Tilemap"]
-position = Vector2(815, 134)
+[node name="StaticBody2D" type="StaticBody2D" parent="Tilemap"]
+position = Vector2(418, 165)
 
-[node name="spawn_background2" type="Node2D" parent="Tilemap"]
-position = Vector2(379, 124)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Tilemap/StaticBody2D"]
+position = Vector2(-354.5, 0)
+shape = SubResource("RectangleShape2D_kvlnv")
 
-[node name="spawn_background3" type="Node2D" parent="Tilemap"]
-position = Vector2(548, 126)
+[node name="RayCast2D" type="RayCast2D" parent="Tilemap"]
+position = Vector2(-825, 145)
+target_position = Vector2(1786, -3)
 
 [node name="TopPanel" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(0, 175)
@@ -405,6 +429,175 @@ offset_left = 99.0
 offset_top = 130.0
 offset_right = 139.0
 offset_bottom = 150.0
+
+[node name="NPCs" type="Node2D" parent="."]
+
+[node name="Npc1" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(1592, 482)
+movement_type = 1
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc2" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(1592, 482)
+movement_type = 1
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc3" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(1592, 482)
+movement_type = 1
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc4" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(1592, 482)
+movement_type = 1
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc5" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(1318, 482)
+movement_type = 1
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc6" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(1318, 482)
+movement_type = 1
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc7" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(1086, 482)
+movement_type = 1
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc8" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(1086, 482)
+movement_type = 1
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc9" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(1318, 482)
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc10" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(1086, 482)
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc11" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(1086, 482)
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc12" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(1521, 482)
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc13" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(859, 482)
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc14" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(859, 482)
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="Npc15" parent="NPCs" node_paths=PackedStringArray("waypoints_container") instance=ExtResource("9_kvlnv")]
+position = Vector2(585, 482)
+waypoints_container = NodePath("../../Waypoints")
+
+[node name="CameraFeed" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 278.0
+offset_right = 457.0
+offset_bottom = 678.0
+script = ExtResource("8_r8eje")
+
+[node name="CameraButtons" type="Control" parent="CameraFeed"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="CameraFeed/CameraButtons"]
+modulate = Color(0.06, 1, 0.357667, 1)
+self_modulate = Color(25.415, 19.889, 1.105, 0.685)
+layout_mode = 0
+offset_left = 912.0
+offset_top = 489.0
+offset_right = 920.0
+offset_bottom = 497.0
+
+[node name="Button2" type="Button" parent="CameraFeed/CameraButtons"]
+modulate = Color(0.06, 1, 0.357667, 1)
+self_modulate = Color(25.415, 19.889, 1.105, 0.685)
+layout_mode = 0
+offset_left = 227.0
+offset_top = 11.0
+offset_right = 243.0
+offset_bottom = 19.0
+
+[node name="CameraFeedRect" type="TextureRect" parent="CameraFeed"]
+layout_mode = 2
+texture = ExtResource("5_kyx1g")
+
+[node name="MainFeedContainer" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
+layout_mode = 0
+offset_left = 47.0
+offset_top = 25.0
+offset_right = 434.0
+offset_bottom = 275.0
+
+[node name="MainFeedViewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/MainFeedContainer"]
+handle_input_locally = false
+size = Vector2i(387, 250)
+render_target_update_mode = 4
+
+[node name="Creature" parent="CameraFeed/CameraFeedRect/MainFeedContainer/MainFeedViewport" instance=ExtResource("27_whs7n")]
+
+[node name="FeedNameLabel" type="Label" parent="CameraFeed/CameraFeedRect"]
+layout_mode = 0
+offset_left = 242.0
+offset_top = 44.0
+offset_right = 431.0
+offset_bottom = 72.0
+theme_override_constants/line_spacing = -15
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("6_okuri")
+theme_override_font_sizes/font_size = 25
+text = "CREATURE CONTAINMENT"
+horizontal_alignment = 2
+
+[node name="MenuPanel" type="PanelContainer" parent="CameraFeed/CameraFeedRect"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 47.0
+offset_right = 152.0
+offset_bottom = 268.0
+script = ExtResource("16_058p6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CameraFeed/CameraFeedRect/MenuPanel"]
+layout_mode = 2
+
+[node name="ButtonChat" type="Button" parent="CameraFeed/CameraFeedRect/MenuPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_okuri")
+theme_override_font_sizes/font_size = 28
+text = "Converse"
+
+[node name="ButtonLook" type="Button" parent="CameraFeed/CameraFeedRect/MenuPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_okuri")
+theme_override_font_sizes/font_size = 28
+text = "Look At"
+
+[node name="ButtonTorture" type="Button" parent="CameraFeed/CameraFeedRect/MenuPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_okuri")
+theme_override_font_sizes/font_size = 28
+text = "Torture"
+
+[node name="ButtonInterrogate" type="Button" parent="CameraFeed/CameraFeedRect/MenuPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_okuri")
+theme_override_font_sizes/font_size = 28
+text = "Interrogate"
 
 [node name="BottomPanel" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(0, 325)
@@ -1307,225 +1500,11 @@ vertical_alignment = 1
 uppercase = true
 metadata/_edit_use_anchors_ = true
 
-[node name="CameraFeed" type="MarginContainer" parent="." node_paths=PackedStringArray("subviewports")]
-layout_mode = 0
-offset_top = 175.0
-offset_right = 450.0
-offset_bottom = 575.0
-script = ExtResource("8_r8eje")
-subviewports = [NodePath("CameraFeedRect/MainFeedContainer/MainFeedViewport"), NodePath("CameraFeedRect/SmallFeed1Container/SmallFeed1Viewport"), NodePath("CameraFeedRect/SmallFeed2Container/SmallFeed2Viewport"), NodePath("CameraFeedRect/SmallFeed3Container/SmallFeed3Viewport"), NodePath("CameraFeedRect/SmallFeed4Container/SmallFeed4Viewport"), NodePath("CameraFeedRect/EntityFeedContainer/EntityFeedViewport")]
-
-[node name="CameraButtons" type="Control" parent="CameraFeed"]
-layout_mode = 2
-
-[node name="Button" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 912.0
-offset_top = 489.0
-offset_right = 920.0
-offset_bottom = 497.0
-
-[node name="Button7" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 357.0
-offset_top = 295.0
-offset_right = 381.0
-offset_bottom = 303.0
-
-[node name="Button6" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 59.0
-offset_top = 311.0
-offset_right = 75.0
-offset_bottom = 319.0
-
-[node name="Button5" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 121.0
-offset_top = 311.0
-offset_right = 137.0
-offset_bottom = 319.0
-
-[node name="Button4" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 176.0
-offset_top = 309.0
-offset_right = 192.0
-offset_bottom = 317.0
-
-[node name="Button3" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 238.0
-offset_top = 309.0
-offset_right = 254.0
-offset_bottom = 317.0
-
-[node name="Button2" type="Button" parent="CameraFeed/CameraButtons"]
-modulate = Color(0.06, 1, 0.357667, 1)
-self_modulate = Color(25.415, 19.889, 1.105, 0.685)
-layout_mode = 0
-offset_left = 227.0
-offset_top = 11.0
-offset_right = 243.0
-offset_bottom = 19.0
-
-[node name="CameraFeedRect" type="TextureRect" parent="CameraFeed"]
-layout_mode = 2
-texture = ExtResource("5_kyx1g")
-
-[node name="MainFeedContainer" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
-layout_mode = 0
-offset_left = 47.0
-offset_top = 25.0
-offset_right = 434.0
-offset_bottom = 275.0
-
-[node name="MainFeedViewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/MainFeedContainer"]
-handle_input_locally = false
-size = Vector2i(387, 250)
-render_target_update_mode = 4
-
-[node name="Common_Room" parent="CameraFeed/CameraFeedRect/MainFeedContainer/MainFeedViewport" instance=ExtResource("21_wn4yt")]
-position = Vector2(-12, 1)
-
-[node name="SmallFeed1Container" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
-custom_minimum_size = Vector2(56, 60)
-layout_mode = 0
-offset_left = 40.0
-offset_top = 336.0
-offset_right = 96.0
-offset_bottom = 396.0
-
-[node name="SmallFeed1Viewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/SmallFeed1Container"]
-handle_input_locally = false
-size = Vector2i(56, 60)
-size_2d_override = Vector2i(390, 250)
-size_2d_override_stretch = true
-render_target_update_mode = 4
-
-[node name="Common_Room" parent="CameraFeed/CameraFeedRect/SmallFeed1Container/SmallFeed1Viewport" instance=ExtResource("21_wn4yt")]
-
-[node name="SmallFeed1Button" type="Button" parent="CameraFeed/CameraFeedRect/SmallFeed1Container"]
-custom_minimum_size = Vector2(56, 60)
-layout_mode = 2
-flat = true
-
-[node name="SmallFeed2Container" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
-custom_minimum_size = Vector2(56, 60)
-layout_mode = 0
-offset_left = 98.0
-offset_top = 336.0
-offset_right = 154.0
-offset_bottom = 396.0
-
-[node name="SmallFeed2Viewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/SmallFeed2Container"]
-handle_input_locally = false
-size = Vector2i(56, 60)
-size_2d_override = Vector2i(390, 250)
-size_2d_override_stretch = true
-render_target_update_mode = 4
-
-[node name="Barracks" parent="CameraFeed/CameraFeedRect/SmallFeed2Container/SmallFeed2Viewport" instance=ExtResource("24_o81xr")]
-
-[node name="SmallFeed2Button" type="Button" parent="CameraFeed/CameraFeedRect/SmallFeed2Container"]
-custom_minimum_size = Vector2(56, 60)
-layout_mode = 2
-flat = true
-
-[node name="SmallFeed3Container" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
-custom_minimum_size = Vector2(56, 60)
-layout_mode = 0
-offset_left = 156.0
-offset_top = 336.0
-offset_right = 212.0
-offset_bottom = 396.0
-
-[node name="SmallFeed3Viewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/SmallFeed3Container"]
-handle_input_locally = false
-size = Vector2i(56, 60)
-size_2d_override = Vector2i(390, 250)
-size_2d_override_stretch = true
-render_target_update_mode = 4
-
-[node name="Common_Room" parent="CameraFeed/CameraFeedRect/SmallFeed3Container/SmallFeed3Viewport" instance=ExtResource("25_kvlnv")]
-
-[node name="SmallFeed3Button" type="Button" parent="CameraFeed/CameraFeedRect/SmallFeed3Container"]
-custom_minimum_size = Vector2(56, 60)
-layout_mode = 2
-flat = true
-
-[node name="SmallFeed4Container" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
-custom_minimum_size = Vector2(56, 60)
-layout_mode = 0
-offset_left = 215.0
-offset_top = 335.0
-offset_right = 271.0
-offset_bottom = 395.0
-
-[node name="SmallFeed4Viewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/SmallFeed4Container"]
-handle_input_locally = false
-size = Vector2i(56, 60)
-size_2d_override = Vector2i(390, 250)
-size_2d_override_stretch = true
-render_target_update_mode = 4
-
-[node name="Bedroom" parent="CameraFeed/CameraFeedRect/SmallFeed4Container/SmallFeed4Viewport" instance=ExtResource("26_o3ev5")]
-
-[node name="SmallFeed4Button" type="Button" parent="CameraFeed/CameraFeedRect/SmallFeed4Container"]
-custom_minimum_size = Vector2(56, 60)
-layout_mode = 2
-flat = true
-
-[node name="EntityFeedContainer" type="SubViewportContainer" parent="CameraFeed/CameraFeedRect"]
-layout_mode = 0
-offset_left = 303.0
-offset_top = 307.0
-offset_right = 433.0
-offset_bottom = 397.0
-
-[node name="EntityFeedViewport" type="SubViewport" parent="CameraFeed/CameraFeedRect/EntityFeedContainer"]
-handle_input_locally = false
-size = Vector2i(130, 90)
-size_2d_override = Vector2i(390, 250)
-size_2d_override_stretch = true
-render_target_update_mode = 4
-
-[node name="Bedroom" parent="CameraFeed/CameraFeedRect/EntityFeedContainer/EntityFeedViewport" instance=ExtResource("27_whs7n")]
-
-[node name="EntityFeedButton" type="Button" parent="CameraFeed/CameraFeedRect/EntityFeedContainer"]
-custom_minimum_size = Vector2(130, 90)
-layout_mode = 2
-flat = true
-
-[node name="FeedNameLabel" type="Label" parent="CameraFeed/CameraFeedRect"]
-layout_mode = 0
-offset_left = 242.0
-offset_top = 44.0
-offset_right = 431.0
-offset_bottom = 72.0
-theme_override_constants/line_spacing = -15
-theme_override_constants/outline_size = 5
-theme_override_fonts/font = ExtResource("6_okuri")
-theme_override_font_sizes/font_size = 25
-text = "COMMON ROOM"
-horizontal_alignment = 2
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_r8eje")
 
 [node name="dialogueBox" type="MarginContainer" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 450.0
 offset_top = 215.0
@@ -1590,9 +1569,3 @@ flat = true
 position = Vector2(19, 19)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("26_26nsp")
-
-[connection signal="pressed" from="CameraFeed/CameraFeedRect/SmallFeed1Container/SmallFeed1Button" to="CameraFeed" method="_on_small_feed_1_pressed"]
-[connection signal="pressed" from="CameraFeed/CameraFeedRect/SmallFeed2Container/SmallFeed2Button" to="CameraFeed" method="_on_small_feed_2_pressed"]
-[connection signal="pressed" from="CameraFeed/CameraFeedRect/SmallFeed3Container/SmallFeed3Button" to="CameraFeed" method="_on_small_feed_3_pressed"]
-[connection signal="pressed" from="CameraFeed/CameraFeedRect/SmallFeed4Container/SmallFeed4Button" to="CameraFeed" method="_on_small_feed_4_pressed"]
-[connection signal="pressed" from="CameraFeed/CameraFeedRect/EntityFeedContainer/EntityFeedButton" to="CameraFeed" method="_on_small_feed_5_pressed"]

@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=4 uid="uid://8f11j77nx4hv"]
+[gd_scene load_steps=3 format=4 uid="uid://8f11j77nx4hv"]
 
 [ext_resource type="TileSet" uid="uid://bidtnsah5g5wl" path="res://assets/tilesets/Camp_Tileset.tres" id="1_2f21x"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lery3"]
+size = Vector2(568, 20)
 
 [node name="Barracks" type="Node2D"]
 
@@ -37,5 +40,21 @@ tile_set = ExtResource("1_2f21x")
 tile_map_data = PackedByteArray("AAABAAAAAwAbABMAAAACAAAAAwAcABMAAAADAAAAAwAdABMAAAAEAAAAAwAeABMAAAAAAAEAAwAbABMAAAABAAEAAwAcABMAAAACAAEAAwAdABMAAAADAAEAAwAeABMAAAABAA0AAwAbABUAAAABAA4AAwAbABYAAAACAA4AAwAMABIAAAADAA4AAwANABIAAAACAA0AAwAMABEAAAADAA0AAwANABEAAAAEAA0AAwAOABEAAAAEAA4AAwAOABIAAAAFAA0AAwAPABEAAAAFAA4AAwAPABIAAAAHAA0AAwAMAA8AAAAHAA4AAwAMABAAAAAIAA0AAwANAA8AAAAIAA4AAwANABAAAAAJAA0AAwAOAA8AAAAJAA4AAwAOABAAAAAKAA0AAwAPAA8AAAAKAA4AAwAPABAAAAAMAA0AAwAMABEAAAAMAA4AAwAMABIAAAANAA0AAwANABEAAAANAA4AAwANABIAAAAOAA0AAwAOABEAAAAOAA4AAwAOABIAAAAPAA0AAwAPABEAAAAPAA4AAwAPABIAAAAUAA0AAwAGABYAAAAUAA4AAwAGABcAAAAVAA0AAwAHABYAAAAVAA4AAwAHABcAAAAWAA0AAwAIABYAAAAWAA4AAwAIABcAAAAXAAwAAwAJABUAAAAXAA0AAwAJABYAAAAXAA4AAwAJABcAAAA=")
 tile_set = ExtResource("1_2f21x")
 
-[node name="spawn_barracks" type="Node2D" parent="."]
-position = Vector2(429, 195)
+[node name="EntryVisibleWaypoint" type="Node2D" parent="."]
+position = Vector2(307, 221)
+
+[node name="EntryWaypoint" type="Node2D" parent="."]
+position = Vector2(423, 213)
+
+[node name="ExitWaypoint" type="Node2D" parent="."]
+position = Vector2(421, 213)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(184, 253)
+shape = SubResource("RectangleShape2D_lery3")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2(-88, 241)
+target_position = Vector2(545, 2)

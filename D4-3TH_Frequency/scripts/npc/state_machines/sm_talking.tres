@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="StateMachine" load_steps=2 format=3 uid="uid://ls0kgsd4unrv"]
 
-[ext_resource type="Script" uid="uid://c70hd0foog1hm" path="res://scripts/npc/state_machines/state_machine.gd" id="1_8uwfq"]
+[ext_resource type="Script" uid="uid://c70hd0foog1hm" path="res://scripts/npc/state_machines/npc_state_machine.gd" id="1_8uwfq"]
 
 [resource]
 script = ExtResource("1_8uwfq")

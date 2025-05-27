@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=4 uid="uid://cgfn0qhb2jc6b"]
+[gd_scene load_steps=3 format=4 uid="uid://cgfn0qhb2jc6b"]
 
 [ext_resource type="TileSet" uid="uid://bidtnsah5g5wl" path="res://assets/tilesets/Camp_Tileset.tres" id="1_upmfi"]
+[ext_resource type="Script" uid="uid://ckkldasy2d580" path="res://scripts/npc/entity.gd" id="2_bvms0"]
 
-[node name="Bedroom" type="Node2D"]
+[node name="Creature" type="Node2D"]
 
 [node name="Control" type="Control" parent="."]
 custom_minimum_size = Vector2(390, 250)
@@ -42,5 +43,7 @@ tile_set = ExtResource("1_upmfi")
 tile_map_data = PackedByteArray("AAABAAAAAwAbABMAAAACAAAAAwAcABMAAAADAAAAAwAdABMAAAAEAAAAAwAeABMAAAAAAAEAAwAbABMAAAAFAAwAAwAAAAIAAAAFAA0AAwAAAAMAAAAFAA4AAwAAAAQAAAA=")
 tile_set = ExtResource("1_upmfi")
 
-[node name="spawn_creature" type="Node2D" parent="."]
-position = Vector2(-44, 198)
+[node name="Entity" type="Node2D" parent="."]
+script = ExtResource("2_bvms0")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Entity"]

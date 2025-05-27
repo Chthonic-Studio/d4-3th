@@ -22,8 +22,8 @@ TimeManager="*res://scripts/timeManager.gd"
 AudioManager="*res://scripts/audioManager.gd"
 DialogueManager="*res://scripts/dialogueManager.gd"
 EventsManager="*res://scripts/eventsManager.gd"
-CameraFeedManager="res://scripts/cameraFeedManager.gd"
 NPCManager="*res://scripts/npc_manager.gd"
+NPC_DialoguePool="*res://scripts/npc/npc_dialogue_pool.gd"
 
 [display]
 

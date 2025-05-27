@@ -1,16 +1,22 @@
-[gd_scene load_steps=5 format=3 uid="uid://lhyowrfq5o1v"]
+[gd_scene load_steps=7 format=3 uid="uid://beqtobadychua"]
 
-[ext_resource type="Script" uid="uid://jxkp5utb46hm" path="res://scripts/npc/npc.gd" id="1_rv78h"]
-[ext_resource type="SpriteFrames" uid="uid://xs3v3tl2ujmh" path="res://assets/images/sprites/soldier1/soldier1_spriteFrame.tres" id="2_abqhh"]
-[ext_resource type="Texture2D" uid="uid://cf2kdcxr5xwuu" path="res://assets/images/messageBubble.png" id="3_rv78h"]
+[ext_resource type="Script" uid="uid://jxkp5utb46hm" path="res://scripts/npc/npc.gd" id="1_4vejd"]
+[ext_resource type="Script" uid="uid://c70hd0foog1hm" path="res://scripts/npc/state_machines/npc_state_machine.gd" id="2_ws0vm"]
+[ext_resource type="SpriteFrames" uid="uid://xs3v3tl2ujmh" path="res://assets/images/sprites/soldier1/soldier1_spriteFrame.tres" id="3_rhr3r"]
+[ext_resource type="Texture2D" uid="uid://cf2kdcxr5xwuu" path="res://assets/images/messageBubble.png" id="4_t53lx"]
+
+[sub_resource type="Resource" id="Resource_4wlns"]
+script = ExtResource("2_ws0vm")
+state = "idle"
+state_data = {}
+metadata/_custom_type_script = "uid://c70hd0foog1hm"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_abqhh"]
 radius = 4.0
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
-collision_layer = 0
-safe_margin = 0.5
-script = ExtResource("1_rv78h")
+script = ExtResource("1_4vejd")
+state_machine = SubResource("Resource_4wlns")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0.6, -3.4)
@@ -19,7 +25,7 @@ shape = SubResource("CapsuleShape2D_abqhh")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(1.6, -14.4)
 scale = Vector2(0.4, 0.4)
-sprite_frames = ExtResource("2_abqhh")
+sprite_frames = ExtResource("3_rhr3r")
 animation = &"moving"
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
@@ -32,7 +38,7 @@ visible = false
 [node name="Sprite2D" type="Sprite2D" parent="DialogueBubble"]
 position = Vector2(1, -35)
 scale = Vector2(0.3, 0.3)
-texture = ExtResource("3_rv78h")
+texture = ExtResource("4_t53lx")
 
 [node name="Label" type="Label" parent="DialogueBubble/Sprite2D"]
 custom_minimum_size = Vector2(350, 0)
@@ -42,5 +48,3 @@ offset_right = 176.667
 offset_bottom = 22.3333
 theme_override_font_sizes/font_size = 15
 autowrap_mode = 3
-
-[node name="IdleTimer" type="Timer" parent="."]
