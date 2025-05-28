@@ -3,7 +3,7 @@
 ## - Attach to the entity Node2D under creature.tscn (not the root "room").
 ## - In your main scene or CameraFeedRect, connect the entity menu panel's `interaction_selected(action: String)` signal to this script's `interact(action: String)` method.
 
-extends Node2D
+extends CharacterBody2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D # Adjust path if needed
 

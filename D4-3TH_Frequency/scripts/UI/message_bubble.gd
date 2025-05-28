@@ -88,3 +88,6 @@ func _format_time(time_dict):
 	var month = "%02d" % (time_dict.month if time_dict.has("month") else 5)	
 	var day = "%02d" % time_dict.day
 	return "%s:%s, %s/%s" % [hour, minute, month, day]
+
+func is_revealing() -> bool:
+	return reveal_timer != null

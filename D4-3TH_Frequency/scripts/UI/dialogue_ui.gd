@@ -22,6 +22,7 @@ func _ready():
 	GameManager.connect("frequency_changed_dialogue", Callable(self, "_update_dialogue_visibility"))
 	GameManager.connect("listen_toggled", Callable(self, "_update_dialogue_visibility"))
 	GameManager.connect("reply_conditions_changed", Callable(self, "_on_conditions_changed"))
+	GameManager.connect("active_frequency_changed", Callable(self, "_on_active_frequency_changed"))
 	bottom_panel.connect("dialogue_conditions_possibly_changed", Callable(self, "_on_conditions_changed"))
 	# Call _on_conditions_changed on player toggling switches or changing frequency
 	toggle_dialogue_button.pressed.connect(_on_toggle_dialogue_pressed)
@@ -31,16 +32,20 @@ func _ready():
 func _on_dialogue_started(frequency_id):
 	if frequency_id == GameManager.current_frequency:
 		show_for_frequency(frequency_id)
+	self.visible = true
 	_on_conditions_changed()
 
-# --- NEW: Centralized check for all dialogue conditions and UI visibility ---
+func _on_active_frequency_changed(new_id: int):
+	show_for_frequency(new_id)
+
 func _on_conditions_changed(_a = null, _b = null):
 	var current_freq = GameManager.current_frequency
 	var listen_on = GameManager.listenOn
 	var reply_on = GameManager.replyOn
-	
-	# Check for active/pending/waiting dialogue for this frequency
 	var status: String = ""
+	if frequency_id == null:
+		frequency_id = GameManager.current_frequency
+	
 	if DialogueManager.frequency_pending_dialogue.has(current_freq):
 		status = EventsManager.get_dialogue_status(DialogueManager.frequency_pending_dialogue[current_freq])
 	elif DialogueManager.active_dialogues.has(current_freq):
@@ -50,23 +55,20 @@ func _on_conditions_changed(_a = null, _b = null):
 	else:
 		status = "off"
 	
-	var conditions_met = (frequency_id == current_freq and listen_on and reply_on and (status == "onStandby" or status == "active" or status == "waiting"))
+	print("DIALOGUE UI: freq_id=%s current_freq=%s listen=%s reply=%s status=%s" % [str(frequency_id), str(current_freq), str(listen_on), str(reply_on), status])
 	
-	# Track previous conditions_met state for interruption logic
+	var conditions_met = (frequency_id == current_freq and listen_on and reply_on and (status == "onStandby" or status == "active" or status == "waiting"))
 	var was_met = last_conditions_met
 	last_conditions_met = conditions_met
-	
-	# Only show UI if all conditions met
 	self.visible = conditions_met
 	
-	# Handle dialogue activation/resume/interruption
 	if conditions_met:
 		if status == "onStandby":
+			print("DIALOGUE UI: Trying to activate dialogue for freq %s" % str(current_freq))
 			DialogueManager.try_activate_dialogue(current_freq)
 		elif status == "waiting":
 			DialogueManager.try_resume_waiting_dialogue(current_freq)
 	else:
-		# Only interrupt if transitioning from visible to not visible
 		if was_met and DialogueManager.active_dialogues.has(current_freq):
 			DialogueManager.interrupt_active_dialogue(current_freq)
 		self.visible = false
@@ -90,6 +92,7 @@ func _populate_history():
 	_scroll_to_bottom()
 
 func _on_message_added(msg_freq_id, msg):
+	print("MESSAGE ADDED: freq_id=%s, msg=%s" % [str(msg_freq_id), str(msg)])
 	if msg_freq_id != frequency_id: return
 	var bubble = MessageBubble.instantiate()
 	bubble.setup(msg)
@@ -144,11 +147,20 @@ func _update_dialogue_visibility():
 		self.visible = false
 
 func _on_toggle_dialogue_pressed():
-	# Only allow hiding if no active dialogue
-	if DialogueManager.is_dialogue_active(frequency_id):
-	# Optionally show a message or play a sound
-		toggle_dialogue_button.tooltip_text = "Cannot close dialogue while a conversation is active!"
+	if not self.visible:
+		self.visible = true
+		toggle_dialogue_button.tooltip_text = "Show/Hide dialogue"
 		return
-	# Toggle visibility
-	toggle_dialogue_button.tooltip_text = "Show/Hide dialogue"
+	var check_freq_id = frequency_id if frequency_id != null else GameManager.current_frequency
+	if check_freq_id != null and DialogueManager.is_dialogue_active(check_freq_id) and _is_message_revealing():
+		toggle_dialogue_button.tooltip_text = "Cannot close dialogue while a message is revealing!"
+		return
 	self.visible = not self.visible
+	toggle_dialogue_button.tooltip_text = "Show/Hide dialogue"
+	
+
+func _is_message_revealing() -> bool:
+	for bubble in vbox.get_children():
+		if bubble.has_method("is_revealing") and bubble.is_revealing():
+			return true
+	return false

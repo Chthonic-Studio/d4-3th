@@ -107,6 +107,20 @@ func load_dialogue_status():
 func reset_dialogue_status():
 	dialogue_status = {}
 	save_dialogue_status()
+	
+func set_frequency_compromised(freq_id: int):
+	set_frequency_flag(freq_id, "compromised", true)
+	# Optionally, update the frequency status as well (if you want UI to reflect instantly)
+	for i in range(GameManager.frequencies.size()):
+		if GameManager.frequencies[i]["id"] == freq_id:
+			GameManager.frequencies[i]["status"] = "COMPROMISED"
+	for i in range(GameManager.found_frequencies.size()):
+		if GameManager.found_frequencies[i]["id"] == freq_id:
+			GameManager.found_frequencies[i]["status"] = "COMPROMISED"
+	GameManager.emit_signal("frequencies_updated")
+	GameManager.emit_signal("found_frequencies_updated")
+
+
 
 # SAVE/LOAD
 

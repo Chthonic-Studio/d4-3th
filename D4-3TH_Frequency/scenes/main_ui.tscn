@@ -1,19 +1,25 @@
-[gd_scene load_steps=59 format=4 uid="uid://bx78ucsp7du5h"]
+[gd_scene load_steps=65 format=4 uid="uid://bx78ucsp7du5h"]
 
 [ext_resource type="Material" uid="uid://wwpwikc46ifu" path="res://assets/resources/swaying_trees.tres" id="1_4yyl0"]
+[ext_resource type="Texture2D" uid="uid://lw1d3ukpys08" path="res://assets/images/backgrounds/dawn/1.png" id="1_j75ip"]
 [ext_resource type="TileSet" uid="uid://bidtnsah5g5wl" path="res://assets/tilesets/Camp_Tileset.tres" id="1_jnl7h"]
 [ext_resource type="Script" uid="uid://db7bnmpuxymut" path="res://scripts/UI/top_panel.gd" id="1_kyx1g"]
 [ext_resource type="Texture2D" uid="uid://cksamha1xgoyl" path="res://assets/images/TopRightPanel.png" id="1_scoti"]
 [ext_resource type="Script" uid="uid://bjhatbfhkycad" path="res://scripts/UI/bottom_panel.gd" id="2_46p8p"]
+[ext_resource type="Texture2D" uid="uid://b55a1tjamn1rg" path="res://assets/images/backgrounds/dawn/2.png" id="2_hcjlu"]
 [ext_resource type="Texture2D" uid="uid://ba0tecqsn242d" path="res://assets/images/BottomPanel.png" id="2_i1gbh"]
 [ext_resource type="Texture2D" uid="uid://c3rww77voh7g6" path="res://assets/images/LeavesTexture.png" id="2_j03cv"]
 [ext_resource type="Curve" uid="uid://duaqxrukap4am" path="res://assets/resources/leaves_curve.tres" id="2_rx44x"]
 [ext_resource type="Texture2D" uid="uid://cikkeg1b887bj" path="res://assets/images/bg2.png" id="2_wn4yt"]
 [ext_resource type="Texture2D" uid="uid://bt7atbnc8j5gs" path="res://assets/images/bg3.png" id="3_32s7f"]
 [ext_resource type="Texture2D" uid="uid://dxdgalw73g4br" path="res://assets/images/FlipSwitch2Off.png" id="3_46p8p"]
+[ext_resource type="Texture2D" uid="uid://cyti04vvxgdq4" path="res://assets/images/backgrounds/dawn/3.png" id="3_acyf0"]
 [ext_resource type="Texture2D" uid="uid://ravs50ebsmxr" path="res://assets/images/bg4.png" id="4_26nsp"]
+[ext_resource type="Texture2D" uid="uid://of0m0lthxhlm" path="res://assets/images/backgrounds/dawn/4.png" id="4_i7r6e"]
 [ext_resource type="Texture2D" uid="uid://jafbochpe4o2" path="res://assets/images/FlipSwitchOff.png" id="4_okuri"]
 [ext_resource type="Texture2D" uid="uid://bs32tk2ioadsi" path="res://assets/images/CameraFeed.png" id="5_kyx1g"]
+[ext_resource type="Texture2D" uid="uid://8e178530l54p" path="res://assets/images/5.png" id="5_yvnxk"]
+[ext_resource type="Texture2D" uid="uid://bd8gcmoq66c70" path="res://assets/images/6.png" id="6_j7qii"]
 [ext_resource type="FontFile" uid="uid://wppn0e6hu844" path="res://assets/Silver.ttf" id="6_okuri"]
 [ext_resource type="Texture2D" uid="uid://inc21dnpbq1x" path="res://assets/images/PowerButton.png" id="8_r0apq"]
 [ext_resource type="Script" uid="uid://ccouyexb0bnpi" path="res://scripts/UI/camera_feed.gd" id="8_r8eje"]
@@ -197,55 +203,93 @@ size_flags_vertical = 3
 
 [node name="background" type="Node2D" parent="."]
 
-[node name="BG2" type="Node2D" parent="background"]
+[node name="dynamicBG" type="CanvasModulate" parent="background"]
 
-[node name="Sprite2D" type="Sprite2D" parent="background/BG2"]
+[node name="Sprite2D" type="Sprite2D" parent="background/dynamicBG"]
+position = Vector2(836, 233)
+scale = Vector2(3.06944, 1.60494)
+texture = ExtResource("1_j75ip")
+
+[node name="Sprite2D2" type="Sprite2D" parent="background/dynamicBG"]
+position = Vector2(842, 252)
+scale = Vector2(3.08333, 1.72222)
+texture = ExtResource("2_hcjlu")
+
+[node name="Sprite2D3" type="Sprite2D" parent="background/dynamicBG"]
+position = Vector2(837, 56)
+scale = Vector2(2.96181, 1.6142)
+texture = ExtResource("3_acyf0")
+
+[node name="Sprite2D4" type="Sprite2D" parent="background/dynamicBG"]
+position = Vector2(837, 221)
+scale = Vector2(2.71354, 1.48765)
+texture = ExtResource("4_i7r6e")
+
+[node name="staticBG" type="Node2D" parent="background"]
+
+[node name="BG1" type="Node2D" parent="background/staticBG"]
+
+[node name="Sprite2D" type="Sprite2D" parent="background/staticBG/BG1"]
+position = Vector2(818.5, 210)
+scale = Vector2(2.7309, 1.69136)
+texture = ExtResource("5_yvnxk")
+
+[node name="Sprite2D2" type="Sprite2D" parent="background/staticBG/BG1"]
+position = Vector2(859, 289)
+scale = Vector2(1.80208, 1.35802)
+texture = ExtResource("6_j7qii")
+
+[node name="BG2" type="Node2D" parent="background/staticBG"]
+
+[node name="Sprite2D" type="Sprite2D" parent="background/staticBG/BG2"]
 material = ExtResource("1_4yyl0")
 position = Vector2(1310, 377)
 scale = Vector2(1, 0.73)
 texture = ExtResource("2_wn4yt")
 
-[node name="Sprite2D4" type="Sprite2D" parent="background/BG2"]
+[node name="Sprite2D4" type="Sprite2D" parent="background/staticBG/BG2"]
 material = ExtResource("1_4yyl0")
 position = Vector2(158, 394)
 scale = Vector2(1, 0.5329)
 texture = ExtResource("2_wn4yt")
 
-[node name="Sprite2D3" type="Sprite2D" parent="background/BG2"]
+[node name="Sprite2D3" type="Sprite2D" parent="background/staticBG/BG2"]
 material = ExtResource("1_4yyl0")
 position = Vector2(737, 390)
 scale = Vector2(1, 0.5329)
 texture = ExtResource("2_wn4yt")
 
-[node name="BG3" type="Node2D" parent="background"]
+[node name="BG3" type="Node2D" parent="background/staticBG"]
 
-[node name="Sprite2D2" type="Sprite2D" parent="background/BG3"]
+[node name="Sprite2D2" type="Sprite2D" parent="background/staticBG/BG3"]
 material = ExtResource("1_4yyl0")
 position = Vector2(1311, 344)
 texture = ExtResource("3_32s7f")
 
-[node name="Sprite2D3" type="Sprite2D" parent="background/BG3"]
+[node name="Sprite2D3" type="Sprite2D" parent="background/staticBG/BG3"]
 material = ExtResource("1_4yyl0")
-position = Vector2(736, 344)
+position = Vector2(739.5, 344)
+scale = Vector2(1.01215, 1)
 texture = ExtResource("3_32s7f")
 
-[node name="Sprite2D4" type="Sprite2D" parent="background/BG3"]
+[node name="Sprite2D4" type="Sprite2D" parent="background/staticBG/BG3"]
 material = ExtResource("1_4yyl0")
 position = Vector2(155, 345)
 texture = ExtResource("3_32s7f")
 flip_h = true
 
-[node name="BG4" type="Node2D" parent="background"]
+[node name="BG4" type="Node2D" parent="background/staticBG"]
 
-[node name="Sprite2D2" type="Sprite2D" parent="background/BG4"]
+[node name="Sprite2D2" type="Sprite2D" parent="background/staticBG/BG4"]
 position = Vector2(1333, 362)
 texture = ExtResource("4_26nsp")
 
-[node name="Sprite2D3" type="Sprite2D" parent="background/BG4"]
-position = Vector2(758, 362)
+[node name="Sprite2D3" type="Sprite2D" parent="background/staticBG/BG4"]
+position = Vector2(754, 362)
+scale = Vector2(1.01042, 1)
 texture = ExtResource("4_26nsp")
 
-[node name="Sprite2D4" type="Sprite2D" parent="background/BG4"]
+[node name="Sprite2D4" type="Sprite2D" parent="background/staticBG/BG4"]
 position = Vector2(177, 363)
 texture = ExtResource("4_26nsp")
 flip_h = true
@@ -741,13 +785,14 @@ metadata/_edit_use_anchors_ = true
 
 [node name="voiceModulation" type="Label" parent="BottomPanel/BottomPanelRect"]
 layout_mode = 0
-offset_left = 1120.0
-offset_top = 63.9999
-offset_right = 1265.0
-offset_bottom = 104.0
+offset_left = 1119.0
+offset_top = 66.9999
+offset_right = 1264.0
+offset_bottom = 107.0
 theme_override_fonts/font = ExtResource("6_okuri")
-theme_override_font_sizes/font_size = 35
+theme_override_font_sizes/font_size = 25
 text = "INACTIVE"
+uppercase = true
 
 [node name="transponderSignature" type="Label" parent="BottomPanel/BottomPanelRect"]
 layout_mode = 0
@@ -758,6 +803,7 @@ offset_bottom = 150.0
 theme_override_fonts/font = ExtResource("6_okuri")
 theme_override_font_sizes/font_size = 35
 text = "INACTIVE"
+uppercase = true
 
 [node name="signalNumber1" type="Label" parent="BottomPanel/BottomPanelRect"]
 layout_mode = 0
@@ -868,9 +914,10 @@ metadata/_edit_use_anchors_ = true
 [node name="FrequencyListVBox" type="VBoxContainer" parent="BottomPanel/BPanel_LeftRect/FrequencyListContainer/FrequencyListRect"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.2
-anchor_right = 1.01064
-anchor_bottom = 1.02414
+anchor_left = -0.0159574
+anchor_top = 0.213793
+anchor_right = 0.994683
+anchor_bottom = 1.03793
 offset_right = -1.52588e-05
 theme_override_constants/separation = 12
 script = ExtResource("9_82kx8")
@@ -1504,7 +1551,6 @@ metadata/_edit_use_anchors_ = true
 environment = SubResource("Environment_r8eje")
 
 [node name="dialogueBox" type="MarginContainer" parent="."]
-visible = false
 layout_mode = 0
 offset_left = 450.0
 offset_top = 215.0

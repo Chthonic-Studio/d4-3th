@@ -125,18 +125,43 @@ func update_frequency_list(new_frequencies: Array) -> void:
 		if i < frequencies.size():
 			var freq = frequencies[i]
 			label_nodes[i].text = str(freq["id"])
-			match freq["status"]:
-				"ONLINE":
+			var state = GameManager.get_frequency_state(freq)
+			match state:
+				"normal":
 					label_nodes[i].modulate = Color(0.2, 1.0, 0.2)
-				"OFFLINE":
+					_stop_flashing(label_nodes[i])
+				"no_standby":
 					label_nodes[i].modulate = Color(1, 1, 1)
-				"COMPROMISED":
+					_stop_flashing(label_nodes[i])
+				"compromised":
 					label_nodes[i].modulate = Color(1, 0.1, 0.1)
+					_stop_flashing(label_nodes[i])
+				"emergency":
+					label_nodes[i].modulate = Color(0.2, 1.0, 0.2)
+					_start_flashing(label_nodes[i], Color(0.2, 1.0, 0.2), Color(1, 1, 1))
 			label_nodes[i].visible = true
 			button_nodes[i].visible = true
 		else:
 			label_nodes[i].visible = false
 			button_nodes[i].visible = false
+
+# Helper for flashing, attach a Timer to label if needed
+func _start_flashing(label: Label, color_a: Color, color_b: Color):
+	if not label.has_node("flash_timer"):
+		var timer = Timer.new()
+		timer.name = "flash_timer"
+		timer.wait_time = 0.5
+		timer.one_shot = false
+		timer.autostart = true
+		timer.connect("timeout", Callable(self, "_on_flash_timer_timeout").bind(label, color_a, color_b))
+		label.add_child(timer)
+		timer.start()
+func _stop_flashing(label: Label):
+	if label.has_node("flash_timer"):
+		label.get_node("flash_timer").queue_free()
+		label.modulate = Color(1,1,1)
+func _on_flash_timer_timeout(label: Label, color_a: Color, color_b: Color):
+	label.modulate = color_b if label.modulate == color_a else color_a
 
 func _on_frequency_button_pressed(idx):
 	if idx >= frequencies.size(): return

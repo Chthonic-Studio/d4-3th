@@ -78,9 +78,17 @@ func listenToggled():
 	emit_signal("listen_toggled")
 
 func initialize_run():
+	# Existing logic
 	generate_threat_traits()
 	generate_frequencies()
 	current_frequency = 1001
+	# --- NEW: Ensure 3 random found frequencies at game start ---
+	found_frequencies.clear()
+	for i in range(3):
+		add_found_frequency() # This uses your random generator logic
+	# --- NEW: Put intro_commander on standby for 1001 ---
+	DialogueManager.start_dialogue(1001, "intro_commander")
+
 
 func spawn_npcs():
 	# Wait until all feeds/rooms and thus all NPCs are loaded
@@ -190,3 +198,17 @@ func add_found_frequency(freq_dict := {}):
 
 	found_frequencies.append(freq_dict)
 	emit_signal("found_frequencies_updated")
+
+# Returns: "normal", "no_standby", "compromised", "emergency"
+func get_frequency_state(freq: Dictionary) -> String:
+	# Compromised: status field or EventsManager flag
+	if freq.get("status", "") == "COMPROMISED" or EventsManager.get_frequency_flag(freq["id"], "compromised"):
+		return "compromised"
+	# Emergency: flag in EventsManager
+	if EventsManager.get_frequency_flag(freq["id"], "emergency"):
+		return "emergency"
+	# On standby: pending dialogue for this frequency
+	if DialogueManager.frequency_pending_dialogue.has(freq["id"]):
+		return "normal"
+	# Otherwise: no standby
+	return "no_standby"

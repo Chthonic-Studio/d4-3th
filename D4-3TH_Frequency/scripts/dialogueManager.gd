@@ -108,8 +108,10 @@ func start_dialogue(frequency_id: int, dialogue_id: String) -> bool:
 # Call this whenever player "engages" with a frequency
 # When player TUNES IN and conditions are right, activate the dialogue
 func try_activate_dialogue(frequency_id: int):
+	print("DIALOGUE MANAGER: try_activate_dialogue called for freq", frequency_id)
 	# Only activate if conditions are right (Listen/Reply ON, on correct freq)
 	if not frequency_pending_dialogue.has(frequency_id):
+		print("DIALOGUE MANAGER: No pending dialogue for freq", frequency_id)
 		return
 	var dialogue_id = frequency_pending_dialogue[frequency_id]
 	# Stop standby timer if any
@@ -118,7 +120,6 @@ func try_activate_dialogue(frequency_id: int):
 		standby_timers[frequency_id].queue_free()
 		standby_timers.erase(frequency_id)
 	EventsManager.set_dialogue_status(dialogue_id, "active")
-	# Actually start the dialogue tree
 	active_dialogues[frequency_id] = {
 		"tree_id": dialogue_id,
 		"current_node": "start"
@@ -371,6 +372,39 @@ func load_message_history():
 		file.close()
 		for freq_id in frequency_histories.keys():
 			emit_signal("message_history_loaded", freq_id)
+
+func replace_dialogue_vars(text: String) -> String:
+	# Supports {variable} replacement from EventsManager/global_flags and GameManager
+	var new_text = text
+	var regex = RegEx.new()
+	regex.compile(r"\{([a-zA-Z0-9_]+)\}")
+	var matches = regex.search_all(text)
+	for match in matches:
+		var var_name = match.get_string(1)
+		var value = EventsManager.get_flag(var_name)
+		if value == null and GameManager.has(var_name):
+			value = GameManager.get(var_name)
+		new_text = new_text.replace("{" + var_name + "}", str(value))
+	return new_text
+
+func assign_random_dialogue_to_white_frequency():
+	var candidates = []
+	for freq in GameManager.frequencies + GameManager.found_frequencies:
+		if GameManager.get_frequency_state(freq) == "no_standby":
+			candidates.append(freq)
+	if candidates.size() == 0:
+		return false
+	var freq = candidates.pick_random()
+	# Find unused dialogues (not shown this run)
+	var unused_dialogues = []
+	for d_id in dialogue_data.keys():
+		if EventsManager.get_dialogue_status(d_id) == "off":
+			unused_dialogues.append(d_id)
+	if unused_dialogues.size() == 0:
+		return false
+	var chosen_dialogue = unused_dialogues.pick_random()
+	start_dialogue(freq["id"], chosen_dialogue)
+	return true
 
 # API: externally add messages (e.g. for system messages, events)
 func add_message(frequency_id: int, message_data: Dictionary):
