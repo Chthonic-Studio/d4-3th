@@ -17,7 +17,6 @@
 				"text": "I read you. Situation report?",
 				"next": "report",
 				"set_flags": ["asked_for_report"],
-				"conditions": ["has_radio_contact"],
 			  }
 			]
 		  },
@@ -73,7 +72,12 @@
 			  {
 				"text": "Proceed with caution. Report findings immediately.",
 				"next": "scav_approve_human",
-				"set_flags": ["scav_approved"]
+				"set_flags": ["scav_approved"],
+				"delay": [30, 90],
+				"outcomes": [
+				  { "weight": 70, "node": "scav_report_human" },
+				  { "weight": 30, "node": "scav_report_failed" }
+				]
 			  }
 			]
 		  },

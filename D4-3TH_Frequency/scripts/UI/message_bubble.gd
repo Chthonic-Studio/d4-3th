@@ -18,7 +18,8 @@ func defineLabels() -> void:
 	sender_label = $message_sender
 	body_label = $message_body
 
-func setup(message: Dictionary):
+# Add 'reveal_instantly' param, default false
+func setup(message: Dictionary, reveal_instantly := false):
 	if sender_label == null:
 		defineLabels()
 	else:
@@ -34,8 +35,12 @@ func setup(message: Dictionary):
 		body_label.text = full_text
 		self.add_theme_color_override("bg_color", Color(0.1, 0.2, 0.5, 0.2))
 	else:
-		body_label.text = ""
-		call_deferred("_reveal_word_by_word", full_text)
+		if reveal_instantly:
+			body_label.text = full_text
+			emit_signal("reveal_complete", self)
+		else:
+			body_label.text = ""
+			call_deferred("_reveal_word_by_word", full_text)
 		self.add_theme_color_override("bg_color", Color(0.2, 0.2, 0.2, 0.2))
 
 	# Forward voice modulation to GameManager (for BottomPanel)
@@ -75,7 +80,7 @@ func _reveal_word_by_word(full_text):
 			reveal_timer.stop()
 			reveal_timer.queue_free()
 			reveal_timer = null
-			emit_signal("reveal_complete")
+			emit_signal("reveal_complete", self)
 	)
 	reveal_timer.start()
 	
@@ -90,4 +95,4 @@ func _format_time(time_dict):
 	return "%s:%s, %s/%s" % [hour, minute, month, day]
 
 func is_revealing() -> bool:
-	return reveal_timer != null
+	return reveal_timer != null	

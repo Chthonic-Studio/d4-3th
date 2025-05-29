@@ -1,25 +1,6 @@
 extends Node
 
-# USAGE
-# start_dialogue(frequency_id, dialogue_id):
-# Call when you want to trigger a dialogue for a frequency.
-# It sets the status, starts standby timer if needed, and blocks if another dialogue is in progress for that frequency.
-
-# try_activate_dialogue(frequency_id):
-# Call when player tunes in and all conditions (Listen, Reply, etc.) are met.
-# This will move a dialogue from standby to active, show UI, and pause time.
-
-# interrupt_active_dialogue(frequency_id):
-# Call when player leaves mid-conversation (by frequency change, Listen/Reply toggled off, etc.).
-# This will start the waiting timer.
-
-# try_resume_waiting_dialogue(frequency_id):
-# Call if the player returns to a waiting dialogue before the timer expires.
-
-# get_dialogue_status(dialogue_id):
-# For UI or scripting logic, check the current status of any dialogue.
-
-@export var dialogue_data_path := "res://data/dialogues/dialogues.json" # Path to JSON file(s)
+@export var dialogue_data_path := "res://data/dialogues/dialogues.json"
 @export var message_history_save_path := "user://message_history.save"
 
 signal dialogue_started(frequency_id)
@@ -28,34 +9,29 @@ signal message_added(frequency_id, message_data)
 signal reply_options_changed(frequency_id, options)
 signal message_history_loaded(frequency_id)
 signal system_message(text)
+signal dialogue_data_loaded
 
-# Standby durations for categories
 var standby_duration_map := {
-	"low_priority": 60,    # 1 hour, in-game minutes
-	"mid_priority": 120,   # 2 hours
-	"high_priority": 180,  # 3 hours
-	"permanent": -1        # -1: never expires
+	"low_priority": 60,
+	"mid_priority": 120,
+	"high_priority": 180,
+	"permanent": -1
 }
 var default_standby_category := "low_priority"
 var waiting_duration_minutes := 60
 
-# Runtime Data
-var dialogue_data := {}                # Parsed dialogue trees by id
-var frequency_histories := {}          # {frequency_id: [message_dict, ...]}
-var active_dialogues := {}             # {frequency_id: {tree_id, current_node_id, ...}}
-var frequency_active := {}             # {frequency_id: true/false}
-var frequency_pending_dialogue := {}   # {frequency_id: dialogue_id}
-
-# --- NEW: Timers and state trackers ---
-var standby_timers := {}    # { frequency_id: Timer }
-var waiting_timers := {}    # { frequency_id: Timer }
+var dialogue_data := {}
+var frequency_histories := {}
+var active_dialogues := {}
+var frequency_active := {}
+var frequency_pending_dialogue := {}  # {frequency_id: {id, start_node}}
+var standby_timers := {}
+var waiting_timers := {}
 
 enum VoiceModulation { INACTIVE, NORMAL, HOSTILE, DISTRESSED }
 
-# Helper to find standby duration from JSON node or fallback
 func _get_standby_duration(dialogue_id: String) -> int:
 	var d = null
-	# Find the actual dialogue JSON tree
 	for entry in dialogue_data:
 		if entry == dialogue_id:
 			d = dialogue_data[entry]
@@ -69,7 +45,6 @@ func _ready():
 	load_dialogue_data()
 	load_message_history()
 
-# Load dialogue trees from JSON
 func load_dialogue_data():
 	var file = FileAccess.open(dialogue_data_path, FileAccess.READ)
 	if not file:
@@ -79,78 +54,98 @@ func load_dialogue_data():
 	var parsed = JSON.parse_string(raw)
 	if parsed is Dictionary and parsed.has("dialogues"):
 		for d in parsed["dialogues"]:
-			# Allow standby_category to be at top-level of dialogue if present
 			var tree = d["tree"]
 			if d.has("standby_category"):
 				tree["standby_category"] = d["standby_category"]
 			dialogue_data[d["id"]] = tree
 	else:
 		push_error("DialogueManager: Invalid dialogue data format.")
-
-# Start a dialogue for a frequency
-# Pass in the frequency_id and the dialogue_id to use
-# Start a dialogue, but only if frequency is available (no standby/waiting there)
-# Returns true if started, false if blocked
-func start_dialogue(frequency_id: int, dialogue_id: String) -> bool:
-	# Check if frequency already has a dialogue in progress or standby/waiting
+	print("DEBUG: dialogue_data keys after loading:", dialogue_data.keys())
+	if dialogue_data.has("scavenger_request"):
+		print("DEBUG: scavenger_request tree keys after loading:", dialogue_data["scavenger_request"].keys())
+	emit_signal("dialogue_data_loaded")
+	
+# Start a dialogue for a frequency (optionally at a specific node)
+func start_dialogue(frequency_id: int, dialogue_id: String, start_node: String = "") -> bool:
+	print("DEBUG: (top of start_dialogue) dialogue_data['scavenger_request'] keys:", dialogue_data.get("scavenger_request", {}).keys())
 	if _frequency_has_dialogue(frequency_id):
 		return false
-	# Mark as onStandby and set timer if needed
-	frequency_pending_dialogue[frequency_id] = dialogue_id
+	var tree = dialogue_data.get(dialogue_id, {})
+	print("DEBUG: Starting dialogue", dialogue_id, "tree keys:", tree.keys())
+	var node = start_node
+	if node == "" or not tree.has(node):
+		# Priority: start_human > start_entity > start > any node
+		if tree.has("start_human"):
+			node = "start_human"
+		elif tree.has("start_entity"):
+			node = "start_entity"
+		elif tree.has("start"):
+			node = "start"
+		elif tree.keys().size() > 0:
+			node = tree.keys()[0]
+		else:
+			push_error("DialogueManager: No valid start node in dialogue '%s', tree keys: %s" % [dialogue_id, tree.keys()])
+			return false
+	frequency_pending_dialogue[frequency_id] = {"id": dialogue_id, "start_node": node}
 	EventsManager.set_dialogue_status(dialogue_id, "onStandby")
-	# Start standby timer if not permanent
 	var duration = _get_standby_duration(dialogue_id)
 	if duration > 0:
 		_start_standby_timer(frequency_id, dialogue_id, duration)
 	emit_signal("dialogue_started", frequency_id)
 	return true
-	
-# Call this whenever player "engages" with a frequency
-# When player TUNES IN and conditions are right, activate the dialogue
+
+
+# Helper: Start at dynamic branch based on role
+func start_dialogue_dynamic(frequency_id: int, dialogue_id: String, role: String = "") -> bool:
+	print("DEBUG: (top of start_dialogue) dialogue_data['scavenger_request'] keys:", dialogue_data.get("scavenger_request", {}).keys())
+	var tree = dialogue_data.get(dialogue_id, {})
+	var start_node = "start"
+	if role != "" and tree.has("start_%s" % role):
+		start_node = "start_%s" % role
+	elif tree.has("start"):
+		start_node = "start"
+	elif tree.keys().size() > 0:
+		start_node = tree.keys()[0]
+	else:
+		start_node = ""
+	return start_dialogue(frequency_id, dialogue_id, start_node)
+
 func try_activate_dialogue(frequency_id: int):
-	print("DIALOGUE MANAGER: try_activate_dialogue called for freq", frequency_id)
-	# Only activate if conditions are right (Listen/Reply ON, on correct freq)
 	if not frequency_pending_dialogue.has(frequency_id):
-		print("DIALOGUE MANAGER: No pending dialogue for freq", frequency_id)
 		return
-	var dialogue_id = frequency_pending_dialogue[frequency_id]
-	# Stop standby timer if any
+	var entry = frequency_pending_dialogue[frequency_id]
+	var dialogue_id = entry["id"] if entry.has("id") else entry
+	var start_node = entry.get("start_node", "")
 	if standby_timers.has(frequency_id):
 		standby_timers[frequency_id].stop()
 		standby_timers[frequency_id].queue_free()
 		standby_timers.erase(frequency_id)
 	EventsManager.set_dialogue_status(dialogue_id, "active")
+	var node_id = start_node if start_node != "" else "start"
 	active_dialogues[frequency_id] = {
 		"tree_id": dialogue_id,
-		"current_node": "start"
+		"current_node": node_id
 	}
 	frequency_pending_dialogue.erase(frequency_id)
 	frequency_active[frequency_id] = true
 	emit_signal("dialogue_started", frequency_id)
 	_show_current_node(frequency_id)
-	# Pause time
 	if TimeManager:
 		TimeManager.stop()
 
-# Helper: Check if frequency is blocked for new dialogue (already has onStandby/waiting/active)
 func _frequency_has_dialogue(frequency_id: int) -> bool:
-	if frequency_id in frequency_pending_dialogue:
-		return true
-	if frequency_id in active_dialogues:
-		return true
-	if frequency_id in waiting_timers:
-		return true
-	return false
+	return (
+		frequency_id in frequency_pending_dialogue
+		or frequency_id in active_dialogues
+		or frequency_id in waiting_timers
+	)
 
-# Standby timer logic
 func _start_standby_timer(frequency_id: int, dialogue_id: String, minutes: int):
-	# Remove any old timer
 	if standby_timers.has(frequency_id):
 		standby_timers[frequency_id].queue_free()
 		standby_timers.erase(frequency_id)
-	# Create timer (in-game, so use timeManager callbacks or polling)
 	var timer = Timer.new()
-	timer.wait_time = 0.5  # Each in-game minute is 0.5 real seconds by your timeManager
+	timer.wait_time = 0.5
 	timer.one_shot = false
 	timer.set_meta("frequency_id", frequency_id)
 	timer.set_meta("dialogue_id", dialogue_id)
@@ -159,7 +154,6 @@ func _start_standby_timer(frequency_id: int, dialogue_id: String, minutes: int):
 		var rem = timer.get_meta("remaining") - 1
 		timer.set_meta("remaining", rem)
 		if rem <= 0:
-			# Standby expired, mark as lost
 			EventsManager.set_dialogue_status(dialogue_id, "lost")
 			frequency_pending_dialogue.erase(frequency_id)
 			timer.stop()
@@ -170,23 +164,17 @@ func _start_standby_timer(frequency_id: int, dialogue_id: String, minutes: int):
 	standby_timers[frequency_id] = timer
 	timer.start()
 
-# Handle dialogue interruption when player leaves (Listen or Reply off, or frequency changed)
 func interrupt_active_dialogue(frequency_id: int):
 	if not active_dialogues.has(frequency_id):
 		return
 	var dialogue_id = active_dialogues[frequency_id]["tree_id"]
 	EventsManager.set_dialogue_status(dialogue_id, "waiting")
-	# Start waiting timer (1 hour in-game)
 	_start_waiting_timer(frequency_id, dialogue_id)
-	# Hide UI, mark not active
 	frequency_active[frequency_id] = false
 	emit_signal("dialogue_ended", frequency_id)
-	# Resume time
 	if TimeManager:
 		TimeManager.start()
 
-# End a dialogue for a frequency
-# Mark as done, handle time resume
 func end_dialogue(frequency_id: int):
 	if not active_dialogues.has(frequency_id):
 		return
@@ -195,16 +183,17 @@ func end_dialogue(frequency_id: int):
 	frequency_active[frequency_id] = false
 	active_dialogues.erase(frequency_id)
 	emit_signal("dialogue_ended", frequency_id)
-	# Resume time
+	# emit_signal("reply_options_changed", frequency_id, [])
 	if TimeManager:
 		TimeManager.start()
+	GameManager.set_voice_modulation_value("INACTIVE")
 
 func _start_waiting_timer(frequency_id: int, dialogue_id: String):
 	if waiting_timers.has(frequency_id):
 		waiting_timers[frequency_id].queue_free()
 		waiting_timers.erase(frequency_id)
 	var timer = Timer.new()
-	timer.wait_time = 0.5  # Each in-game minute is 0.5 real seconds
+	timer.wait_time = 0.5
 	timer.one_shot = false
 	timer.set_meta("frequency_id", frequency_id)
 	timer.set_meta("dialogue_id", dialogue_id)
@@ -213,7 +202,6 @@ func _start_waiting_timer(frequency_id: int, dialogue_id: String):
 		var rem = timer.get_meta("remaining") - 1
 		timer.set_meta("remaining", rem)
 		if rem <= 0:
-			# Waiting expired, mark as interrupted
 			EventsManager.set_dialogue_status(dialogue_id, "interrupted")
 			if active_dialogues.has(frequency_id):
 				active_dialogues.erase(frequency_id)
@@ -224,17 +212,15 @@ func _start_waiting_timer(frequency_id: int, dialogue_id: String):
 	add_child(timer)
 	waiting_timers[frequency_id] = timer
 	timer.start()
-	
-# Resume waiting dialogue if player returns before timer expires
+
 func try_resume_waiting_dialogue(frequency_id: int):
 	if not waiting_timers.has(frequency_id):
 		return
-	# Resume dialogue (set as active, remove waiting timer)
 	var dialogue_id = waiting_timers[frequency_id].get_meta("dialogue_id")
 	EventsManager.set_dialogue_status(dialogue_id, "active")
 	active_dialogues[frequency_id] = {
 		"tree_id": dialogue_id,
-		"current_node": "start"  # Optionally track where to resume
+		"current_node": "start"
 	}
 	waiting_timers[frequency_id].stop()
 	waiting_timers[frequency_id].queue_free()
@@ -242,50 +228,47 @@ func try_resume_waiting_dialogue(frequency_id: int):
 	frequency_active[frequency_id] = true
 	emit_signal("dialogue_started", frequency_id)
 	_show_current_node(frequency_id)
-	# Pause time
 	if TimeManager:
 		TimeManager.stop()
 
-# Show the current node (message and replies) for a frequency
 func _show_current_node(frequency_id: int):
 	if not active_dialogues.has(frequency_id):
 		return
 	var tree_id = active_dialogues[frequency_id]["tree_id"]
 	var node_id = active_dialogues[frequency_id]["current_node"]
-	var node = dialogue_data[tree_id][node_id]
+	var tree = dialogue_data.get(tree_id, {})
+	# fallback logic...
+	var node = tree[node_id]
 	if not _check_conditions(node):
-		# If this node is not available, try to end dialogue
 		end_dialogue(frequency_id)
 		return
-	# Compose message
 	var message_data = {
 		"body": node.get("message", ""),
 		"sender": node.get("sender", "operator"),
 		"voice_modulation": node.get("voice_modulation", "Normal"),
 		"audio": node.get("audio", null),
-		"date": TimeManager.get_time(), # {day, hour, minute}
+		"date": TimeManager.get_time(),
 		"bg_audio": node.get("bg_audio", null)
 	}
-	_add_message_to_history(frequency_id, message_data)
-	emit_signal("message_added", frequency_id, message_data)
-	# Handle audio
+	if message_data.voice_modulation != null:
+		GameManager.set_voice_modulation_value(message_data.voice_modulation)
+	var history = frequency_histories.get(frequency_id, [])
+	if history.size() == 0 or history[-1]["body"] != message_data["body"]:
+		_add_message_to_history(frequency_id, message_data)
+		emit_signal("message_added", frequency_id, message_data)
 	if message_data.audio:
 		AudioManager.play_voice(load(message_data.audio))
 	if message_data.bg_audio:
 		AudioManager.play_music(load(message_data.bg_audio))
-	# Prepare replies
 	var reply_options := []
 	for reply in node.get("replies", []):
 		if _check_conditions(reply):
 			reply_options.append(reply)
 	emit_signal("reply_options_changed", frequency_id, reply_options)
-	# If no replies, end dialogue
 	if reply_options.size() == 0:
 		end_dialogue(frequency_id)
 
-# Called by UI when player selects a reply
 func choose_reply(frequency_id: int, reply_index: int):
-	print("Choose_reply called")
 	if not active_dialogues.has(frequency_id):
 		return
 	var tree_id = active_dialogues[frequency_id]["tree_id"]
@@ -300,17 +283,27 @@ func choose_reply(frequency_id: int, reply_index: int):
 		return
 	var reply = available_replies[reply_index]
 
-	# Mark the dialogue as "in_progress" or checkpoint as needed
-	EventsManager.set_dialogue_status(tree_id, "in_progress") # or use another descriptor if you prefer
+	# Hide reply options immediately after picking a reply
+	emit_signal("reply_options_changed", frequency_id, [])
 
-	# Set flags using EventsManager
+	EventsManager.set_dialogue_status(tree_id, "in_progress")
 	for flag in reply.get("set_flags", []):
 		EventsManager.set_flag(flag)
-	# Trigger custom event if present
 	if reply.has("custom_event"):
 		EventsManager.trigger_event(reply["custom_event"], reply.get("custom_payload", {}))
 		emit_signal("system_message", "[SYSTEM] Event triggered: %s" % reply["custom_event"])
-	# Advance to next node, if any
+
+	# Delayed outcome logic
+	if reply.has("delay") and reply.has("outcomes"):
+		var delay_range = reply["delay"]
+		var outcomes = reply["outcomes"]
+		var delay_time = randi_range(delay_range[0], delay_range[1])
+		var next_node = _pick_weighted_node(outcomes)
+		_schedule_delayed_dialogue(frequency_id, tree_id, next_node, delay_time)
+		GameManager.set_voice_modulation_value("INACTIVE")
+		end_dialogue(frequency_id)
+		return
+
 	if reply.has("next"):
 		active_dialogues[frequency_id]["current_node"] = reply["next"]
 		_show_current_node(frequency_id)
@@ -318,18 +311,42 @@ func choose_reply(frequency_id: int, reply_index: int):
 		GameManager.set_voice_modulation_value("INACTIVE")
 		end_dialogue(frequency_id)
 	else:
-		# If neither, just end dialogue for safety
 		GameManager.set_voice_modulation_value("INACTIVE")
 		end_dialogue(frequency_id)
-		
-# Check if all conditions on an object (node or reply) are satisfied
+
+# Weighted random outcome picker
+func _pick_weighted_node(outcomes: Array) -> String:
+	var total = 0
+	for outcome in outcomes:
+		total += outcome["weight"]
+	var pick = randi() % int(total)
+	var acc = 0
+	for outcome in outcomes:
+		acc += outcome["weight"]
+		if pick < acc:
+			return outcome["node"]
+	return outcomes[0]["node"]
+
+# Schedules a follow-up dialogue after delay (puts as pending/standby)
+func _schedule_delayed_dialogue(frequency_id: int, dialogue_id: String, node_id: String, delay_seconds: int):
+	var timer = Timer.new()
+	timer.wait_time = delay_seconds
+	timer.one_shot = true
+	timer.connect("timeout", Callable(self, "_on_delayed_dialogue_timeout").bind(frequency_id, dialogue_id, node_id))
+	add_child(timer)
+	timer.start()
+
+func _on_delayed_dialogue_timeout(frequency_id: int, dialogue_id: String, node_id: String):
+	start_dialogue(frequency_id, dialogue_id, node_id)
+
+# --- End new delayed outcome logic ---
+
 func _check_conditions(obj: Dictionary) -> bool:
 	if not obj.has("conditions"):
 		return true
 	for cond in obj["conditions"]:
 		if cond.begins_with("not_"):
 			var flag = cond.substr(4)
-			# Use EventsManager for all flag checks
 			if EventsManager.get_flag(flag):
 				return false
 		else:
@@ -337,24 +354,20 @@ func _check_conditions(obj: Dictionary) -> bool:
 				return false
 	return true
 
-# Add a message to the persistent history (per frequency)
 func _add_message_to_history(frequency_id: int, message_data: Dictionary):
 	if not frequency_histories.has(frequency_id):
 		frequency_histories[frequency_id] = []
 	frequency_histories[frequency_id].append(message_data)
 
-# Get history for a frequency (for UI)
 func get_message_history(frequency_id: int) -> Array:
 	return frequency_histories.get(frequency_id, [])
 
-# Check if a frequency has an active dialogue
 func is_dialogue_active(frequency_id: int) -> bool:
 	return frequency_active.get(frequency_id, false)
 
 func get_dialogue_status(dialogue_id: String) -> String:
 	return EventsManager.get_dialogue_status(dialogue_id)
 
-# Save/load message history (per run)
 func save_message_history():
 	var file = FileAccess.open(message_history_save_path, FileAccess.WRITE)
 	if not file:
@@ -374,7 +387,6 @@ func load_message_history():
 			emit_signal("message_history_loaded", freq_id)
 
 func replace_dialogue_vars(text: String) -> String:
-	# Supports {variable} replacement from EventsManager/global_flags and GameManager
 	var new_text = text
 	var regex = RegEx.new()
 	regex.compile(r"\{([a-zA-Z0-9_]+)\}")
@@ -395,7 +407,6 @@ func assign_random_dialogue_to_white_frequency():
 	if candidates.size() == 0:
 		return false
 	var freq = candidates.pick_random()
-	# Find unused dialogues (not shown this run)
 	var unused_dialogues = []
 	for d_id in dialogue_data.keys():
 		if EventsManager.get_dialogue_status(d_id) == "off":
@@ -406,20 +417,17 @@ func assign_random_dialogue_to_white_frequency():
 	start_dialogue(freq["id"], chosen_dialogue)
 	return true
 
-# API: externally add messages (e.g. for system messages, events)
 func add_message(frequency_id: int, message_data: Dictionary):
 	_add_message_to_history(frequency_id, message_data)
 	emit_signal("message_added", frequency_id, message_data)
 	save_message_history()
 
-# Set Flags through Events Manager
 func set_flag(flag: String, value: bool = true):
 	EventsManager.set_flag(flag, value)
 
 func get_flag(flag: String) -> bool:
 	return EventsManager.get_flag(flag)
 
-# Optionally expose reset/clear functions for new runs, etc.
 func reset_all():
 	frequency_histories = {}
 	active_dialogues = {}

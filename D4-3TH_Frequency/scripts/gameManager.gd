@@ -35,6 +35,7 @@ var current_voice_modulation: String = "Normal"
 var status = ["ONLINE", "OFFLINE", "COMPROMISED"]
 
 func _ready():
+	await DialogueManager.dialogue_data_loaded
 	initialize_run()
 
 func start_game():
@@ -87,7 +88,7 @@ func initialize_run():
 	for i in range(3):
 		add_found_frequency() # This uses your random generator logic
 	# --- NEW: Put intro_commander on standby for 1001 ---
-	DialogueManager.start_dialogue(1001, "intro_commander")
+	DialogueManager.start_dialogue(1001, "scavenger_request")
 
 
 func spawn_npcs():
