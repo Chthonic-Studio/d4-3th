@@ -99,28 +99,13 @@ func _on_message_added(msg_freq_id, msg):
 	print("MESSAGE ADDED: freq_id=%s, msg=%s" % [str(msg_freq_id), str(msg)])
 	if msg_freq_id != frequency_id: return
 	var bubble = MessageBubble.instantiate()
-	bubble.setup(msg) # <-- default is reveal_instantly = false
+	var reveal_instantly = msg.has("is_new") and not msg["is_new"]
+	bubble.setup(msg, reveal_instantly)
 	vbox.add_child(bubble)
-	bubble.connect("reveal_complete", Callable(self, "_on_bubble_reveal_complete").bind(bubble))
+	bubble.connect("reveal_complete", Callable(self, "_on_bubble_reveal_complete"))
 	_scroll_to_bottom()
 	
-	# --- Get current reply options for this message and update UI ---
-	var current_node = null
-	if DialogueManager.active_dialogues.has(frequency_id):
-		var active = DialogueManager.active_dialogues[frequency_id]
-		var node_id = active["current_node"]
-		var tree_id = active["tree_id"]
-		var tree = DialogueManager.dialogue_data.get(tree_id, {})
-		if tree.has(node_id):
-			current_node = tree[node_id]
-	if current_node and current_node.has("replies"):
-		var options = []
-		for reply in current_node["replies"]:
-			if DialogueManager._check_conditions(reply):
-				options.append(reply)
-		_on_reply_options_changed(frequency_id, options)
-	else:
-		_on_reply_options_changed(frequency_id, [])
+
 
 func _on_reply_options_changed(msg_freq_id, options):
 	if msg_freq_id != frequency_id:

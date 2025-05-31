@@ -113,14 +113,25 @@
 			"replies": [
 			  {
 				"text": "Excellent work, Bravo-3. Return to patrol.",
-				"next": "end",
 				"end_dialogue": true,
 				"set_flags": ["scav_success", "bravo_3_returned_patrol"],
 				"custom_event": "add_resources",
 				"custom_payload": { "food": 5, "power_cell": 1 }
 			  }
 			]
-		  },
+		},
+		  "scav_report_failed": {
+			"message": "Command, Bravo-3. We found the cache, but it was empty. Just a busted transponder. No rations.",
+			"sender": "bravo_3",
+			"voice_modulation": "Normal",
+			"replies": [
+			  {
+				"text": "Understood. Return to patrol.",
+				"end_dialogue": true,
+				"set_flags": ["scav_failure", "bravo_3_returned_patrol"]
+			  }
+			]
+		},
 		  "start_entity": {
 			"message": "Command, this is Bravo-3. We've detected an old supply beacon. Off-route. Could be pre-Collapse rations. *Highly* likely.",
 			"sender": "bravo_3",

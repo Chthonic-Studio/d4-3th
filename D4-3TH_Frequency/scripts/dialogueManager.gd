@@ -183,7 +183,7 @@ func end_dialogue(frequency_id: int):
 	frequency_active[frequency_id] = false
 	active_dialogues.erase(frequency_id)
 	emit_signal("dialogue_ended", frequency_id)
-	# emit_signal("reply_options_changed", frequency_id, [])
+	emit_signal("reply_options_changed", frequency_id, []) 
 	if TimeManager:
 		TimeManager.start()
 	GameManager.set_voice_modulation_value("INACTIVE")
@@ -253,9 +253,14 @@ func _show_current_node(frequency_id: int):
 	if message_data.voice_modulation != null:
 		GameManager.set_voice_modulation_value(message_data.voice_modulation)
 	var history = frequency_histories.get(frequency_id, [])
-	if history.size() == 0 or history[-1]["body"] != message_data["body"]:
+	var is_new_message = true
+	if history.size() > 0 and history[-1]["body"] == message_data["body"]:
+		is_new_message = false
+	if is_new_message:
 		_add_message_to_history(frequency_id, message_data)
-		emit_signal("message_added", frequency_id, message_data)
+	# Always signal, but tag if this is new or not
+	message_data["is_new"] = is_new_message
+	emit_signal("message_added", frequency_id, message_data)
 	if message_data.audio:
 		AudioManager.play_voice(load(message_data.audio))
 	if message_data.bg_audio:
@@ -282,6 +287,16 @@ func choose_reply(frequency_id: int, reply_index: int):
 		push_error("DialogueManager: Invalid reply index")
 		return
 	var reply = available_replies[reply_index]
+	
+	# Log the player's reply to history
+	var player_reply_data = {
+		"body": reply.get("text", ""),
+		"sender": "You",
+		"voice_modulation": "Normal",
+		"date": TimeManager.get_time()
+	}
+	_add_message_to_history(frequency_id, player_reply_data)
+	emit_signal("message_added", frequency_id, player_reply_data)
 
 	# Hide reply options immediately after picking a reply
 	emit_signal("reply_options_changed", frequency_id, [])
@@ -337,7 +352,10 @@ func _schedule_delayed_dialogue(frequency_id: int, dialogue_id: String, node_id:
 	timer.start()
 
 func _on_delayed_dialogue_timeout(frequency_id: int, dialogue_id: String, node_id: String):
-	start_dialogue(frequency_id, dialogue_id, node_id)
+	# Instead of start_dialogue, use try_activate_dialogue to start the pending dialogue immediately.
+	# Set up the pending dialogue node as usual, then activate it.
+	frequency_pending_dialogue[frequency_id] = {"id": dialogue_id, "start_node": node_id}
+	try_activate_dialogue(frequency_id)
 
 # --- End new delayed outcome logic ---
 
